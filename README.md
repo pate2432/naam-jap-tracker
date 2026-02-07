@@ -28,7 +28,7 @@ A calm, mobile-first tracker for two devotees to record daily naam jap. Built wi
 
 1. Create a Supabase project
 2. Enable Email auth (and magic link if desired)
-3. Create two users (Ak and Manna) in the Supabase Auth panel
+3. Create two users  in the Supabase Auth panel
 4. Add these SQL tables and policies in the SQL editor:
 
 ```sql
@@ -99,41 +99,8 @@ before update on jap_entries
 for each row execute function handle_updated_at();
 ```
 
-Optional: restrict database access to specific emails (Ak and Manna):
 
-```sql
-drop policy if exists "Users can insert own entries" on jap_entries;
-drop policy if exists "Users can update own entries same day" on jap_entries;
 
-create policy "Users can insert own entries"
-  on jap_entries for insert
-  with check (
-    auth.uid() = user_id
-    and auth.jwt()->>'email' in ('ak@example.com', 'manna@example.com')
-  );
-
-create policy "Users can update own entries same day"
-  on jap_entries for update
-  using (
-    auth.uid() = user_id
-    and auth.jwt()->>'email' in ('ak@example.com', 'manna@example.com')
-    and local_date = (now() at time zone local_tz)::date
-  )
-  with check (
-    auth.uid() = user_id
-    and auth.jwt()->>'email' in ('ak@example.com', 'manna@example.com')
-    and local_date = (now() at time zone local_tz)::date
-  );
-```
-
-4. Copy your Supabase keys into `.env`
-
-```
-VITE_SUPABASE_URL=your_supabase_url
-VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
-VITE_ALLOWED_EMAILS=ak@example.com,manna@example.com
-VITE_USER_LABELS=ak@example.com:Ak,manna@example.com:Manna
-```
 
 ## Deployment (100% Free)
 
@@ -161,9 +128,4 @@ Edit `src/data/quotes.js` and add new objects to the array:
 }
 ```
 
-## Notes
 
-- The app auto-creates a profile for each user on first login.
-- The "same-day edit" lock is enforced both in the UI and by Supabase policies.
-- Update `VITE_ALLOWED_EMAILS` to restrict access to Ak and Manna only.
-- Set `VITE_USER_LABELS` if you want explicit display names.
