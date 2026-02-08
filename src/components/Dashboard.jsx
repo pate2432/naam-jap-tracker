@@ -20,6 +20,7 @@ import StatsCards from './StatsCards'
 import WeeklySummary from './WeeklySummary'
 import MonthlyInsights from './MonthlyInsights'
 import YearlyTotals from './YearlyTotals'
+import AdminOverride from './AdminOverride'
 
 const getLabelMap = () => {
   const raw = import.meta.env.VITE_USER_LABELS || ''
@@ -245,6 +246,7 @@ export default function Dashboard({ session }) {
         yearLabel={new Date().getFullYear()}
         profiles={visibleProfiles}
       />
+      <AdminOverride profiles={visibleProfiles} />
     </div>
   )
 }

@@ -235,6 +235,14 @@ input {
   background: #fff9f3;
 }
 
+select {
+  padding: 0.7rem 0.9rem;
+  border-radius: 12px;
+  border: 1px solid rgba(130, 98, 142, 0.2);
+  font-size: 1rem;
+  background: #fff9f3;
+}
+
 input:disabled {
   background: rgba(241, 239, 234, 0.7);
 }
@@ -442,6 +450,16 @@ input:disabled {
     rgba(255, 239, 226, 0.85)
   );
   font-size: 0.9rem;
+}
+
+.admin-panel {
+  border: 1px dashed rgba(126, 99, 140, 0.4);
+}
+
+.admin-form {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1rem;
 }
 
 .monthly-grid,

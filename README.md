@@ -99,6 +99,38 @@ before update on jap_entries
 for each row execute function handle_updated_at();
 ```
 
+## Admin Override (Optional)
+
+If you want to change past entries from the app, create a secure admin RPC.
+Paste this in Supabase SQL Editor and replace `YOUR_ADMIN_SECRET`:
+
+```sql
+create or replace function admin_update_jap_entry(
+  secret_input text,
+  target_user_id uuid,
+  target_date date,
+  new_count integer
+)
+returns void
+language plpgsql
+security definer
+as $$
+begin
+  if secret_input <> 'MDwsby2t' then
+    raise exception 'Invalid admin secret';
+  end if;
+
+  insert into jap_entries (user_id, local_date, local_tz, count)
+  values (target_user_id, target_date, 'UTC', new_count)
+  on conflict (user_id, local_date)
+  do update set count = excluded.count, updated_at = now();
+end;
+$$;
+
+grant execute on function admin_update_jap_entry(text, uuid, date, integer) to authenticated;
+```
+
+Optional: restrict database access to specific emails (Ak and Manna):
 
 
 
