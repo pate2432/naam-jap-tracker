@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from 'react'
 import { supabase } from '../lib/supabase'
 import {
+  canEditWithinHours,
   getLocalTimeZone,
   getTodayLocalDate,
-  isToday,
 } from '../lib/date'
 import {
   getMonthlySummary,
@@ -158,7 +158,7 @@ export default function Dashboard({ session }) {
     (entry) => entry.user_id === session.user.id,
   )
 
-  const isEditable = isToday(selectedDate, tz)
+  const isEditable = canEditWithinHours(selectedDate, 36, tz)
   const totals = useMemo(() => sumByUser(entries), [entries])
   const weeklySummary = useMemo(
     () => getWeeklySummary(entries, tz),

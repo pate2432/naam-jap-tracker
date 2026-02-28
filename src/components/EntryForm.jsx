@@ -27,7 +27,7 @@ export default function EntryForm({
     <div className="entry-card">
       <h3>Your daily jap</h3>
       <p className="muted">
-        You can edit only until 11:59 PM of the same day.
+        You can edit up to 36 hours after the date starts.
       </p>
 
       <form onSubmit={handleSubmit}>

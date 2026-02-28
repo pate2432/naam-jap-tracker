@@ -1,5 +1,5 @@
 import { formatInTimeZone } from 'date-fns-tz'
-import { addDays, addMonths } from 'date-fns'
+import { addDays, addHours, addMonths } from 'date-fns'
 
 export const getLocalTimeZone = () =>
   Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC'
@@ -15,6 +15,17 @@ export const getTodayLocalDate = (tz = getLocalTimeZone()) =>
 
 export const isToday = (localDate, tz = getLocalTimeZone()) =>
   localDate === getTodayLocalDate(tz)
+
+export const canEditWithinHours = (
+  localDate,
+  hours = 36,
+  tz = getLocalTimeZone(),
+) => {
+  if (!localDate) return false
+  const dateStart = new Date(`${localDate}T00:00:00`)
+  const deadline = addHours(dateStart, hours)
+  return new Date() <= deadline
+}
 
 export const getMonthKey = (date = new Date(), tz = getLocalTimeZone()) =>
   formatInTimeZone(date, tz, 'yyyy-MM')

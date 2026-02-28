@@ -5,7 +5,7 @@ A calm, mobile-first tracker for two devotees to record daily naam jap. Built wi
 ## Features
 
 - Secure email/password or magic-link authentication
-- Per-day entry (editable only until 11:59 PM local time)
+- Per-day entry (editable up to 36 hours)
 - Both users can view each other's records
 - Weekly, monthly, and yearly insights
 - Soft, spiritual UI with Bhagavad Gita quotes
@@ -75,15 +75,15 @@ create policy "Users can insert own entries"
   on jap_entries for insert
   with check (auth.uid() = user_id);
 
-create policy "Users can update own entries same day"
+create policy "Users can update own entries within 36 hours"
   on jap_entries for update
   using (
     auth.uid() = user_id
-    and local_date = (now() at time zone local_tz)::date
+    and (now() at time zone local_tz) <= (local_date::timestamp + interval '36 hours')
   )
   with check (
     auth.uid() = user_id
-    and local_date = (now() at time zone local_tz)::date
+    and (now() at time zone local_tz) <= (local_date::timestamp + interval '36 hours')
   );
 
 create or replace function handle_updated_at()
@@ -131,6 +131,31 @@ grant execute on function admin_update_jap_entry(text, uuid, date, integer) to a
 ```
 
 Optional: restrict database access to specific emails (Ak and Manna):
+
+```sql
+drop policy if exists "Users can insert own entries" on jap_entries;
+drop policy if exists "Users can update own entries within 36 hours" on jap_entries;
+
+create policy "Users can insert own entries"
+  on jap_entries for insert
+  with check (
+    auth.uid() = user_id
+    and auth.jwt()->>'email' in ('ak@shreeji.com', 'manna@kanha.com')
+  );
+
+create policy "Users can update own entries within 36 hours"
+  on jap_entries for update
+  using (
+    auth.uid() = user_id
+    and auth.jwt()->>'email' in ('ak@shreeji.com', 'manna@kanha.com')
+    and (now() at time zone local_tz) <= (local_date::timestamp + interval '36 hours')
+  )
+  with check (
+    auth.uid() = user_id
+    and auth.jwt()->>'email' in ('ak@shreeji.com', 'manna@kanha.com')
+    and (now() at time zone local_tz) <= (local_date::timestamp + interval '36 hours')
+  );
+```
 
 
 
