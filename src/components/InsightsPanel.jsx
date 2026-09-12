@@ -4,9 +4,9 @@ import MonthlyInsights from './MonthlyInsights'
 import YearlyTotals from './YearlyTotals'
 
 const TABS = [
-  { id: 'week', label: 'This week' },
-  { id: 'month', label: 'This month' },
-  { id: 'year', label: 'This year' },
+  { id: 'week', label: 'This week', short: 'Week' },
+  { id: 'month', label: 'This month', short: 'Month' },
+  { id: 'year', label: 'This year', short: 'Year' },
 ]
 
 export default function InsightsPanel({
@@ -38,7 +38,8 @@ export default function InsightsPanel({
               className={tab === item.id ? 'active' : ''}
               onClick={() => setTab(item.id)}
             >
-              {item.label}
+              <span className="tab-long">{item.label}</span>
+              <span className="tab-short">{item.short}</span>
             </button>
           ))}
         </div>

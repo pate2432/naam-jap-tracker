@@ -1,18 +1,22 @@
 .app-shell {
   position: relative;
-  min-height: 100vh;
-  overflow: hidden;
+  min-height: 100dvh;
+  overflow-x: hidden;
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 1.5rem 1rem 3.5rem;
+  flex-direction: column;
+  align-items: center;
+  padding: max(0.9rem, env(safe-area-inset-top))
+    max(1rem, env(safe-area-inset-right))
+    max(2.5rem, env(safe-area-inset-bottom))
+    max(1rem, env(safe-area-inset-left));
 }
 
 .ambient {
-  position: absolute;
+  position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: 0;
+  overflow: hidden;
 }
 
 .ambient-wash {
@@ -92,20 +96,30 @@
   animation-iteration-count: infinite;
 }
 
+.app-topbar {
+  position: relative;
+  z-index: 3;
+  width: min(1080px, 100%);
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 0.65rem;
+}
+
 .app-container {
   position: relative;
   z-index: 1;
   width: min(1080px, 100%);
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  padding-top: 2.4rem;
+  gap: 1.25rem;
+  min-width: 0;
 }
 
 .dashboard {
   display: flex;
   flex-direction: column;
   gap: 1.35rem;
+  min-width: 0;
 }
 
 .dashboard-header {
@@ -116,8 +130,9 @@
 
 .dashboard-header h1,
 .auth-card h2 {
-  font-size: clamp(2.2rem, 6vw, 3.4rem);
-  line-height: 1.05;
+  font-size: clamp(1.85rem, 8vw, 3.4rem);
+  line-height: 1.08;
+  overflow-wrap: anywhere;
   background: linear-gradient(120deg, #f3d9a4, #f0a6c8 45%, #6ec8c4);
   -webkit-background-clip: text;
   background-clip: text;
@@ -162,9 +177,9 @@
 
 .auth-card {
   border-radius: 28px;
-  padding: 2.1rem 1.6rem 1.8rem;
-  max-width: 520px;
-  margin: 12vh auto 0;
+  padding: 1.5rem 1.15rem 1.4rem;
+  width: min(520px, 100%);
+  margin: 0 auto;
   text-align: center;
 }
 
@@ -224,15 +239,21 @@
 .auth-tabs button,
 .insight-tabs button {
   flex: 1;
+  min-width: 0;
   border-radius: 999px;
-  padding: 0.55rem 0.8rem;
+  padding: 0.65rem 0.55rem;
   font-weight: 500;
+  font-size: 0.86rem;
 }
 
 .auth-tabs button.active,
 .insight-tabs button.active {
   background: linear-gradient(120deg, #e8c27a, #f0a6c8);
   color: #2a1830;
+}
+
+.tab-short {
+  display: none;
 }
 
 .auth-form {
@@ -282,10 +303,12 @@ label {
 
 input,
 select {
+  width: 100%;
+  min-width: 0;
   padding: 0.75rem 0.9rem;
   border-radius: 14px;
   border: 1px solid rgba(232, 194, 122, 0.22);
-  font-size: 1rem;
+  font-size: 16px;
   background: rgba(255, 255, 255, 0.05);
   color: var(--ink);
 }
@@ -357,13 +380,20 @@ option {
 
 .records-item {
   display: grid;
-  grid-template-columns: auto 1fr auto auto;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
   gap: 0.6rem;
   padding: 0.8rem 0.9rem;
   border-radius: 16px;
   align-items: center;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.records-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .records-item.lead {
@@ -436,10 +466,11 @@ option {
 .monthly-value,
 .yearly-value {
   font-family: 'Cormorant Garamond', Georgia, serif;
-  font-size: 2.15rem;
+  font-size: clamp(1.7rem, 7vw, 2.15rem);
   font-weight: 700;
   color: var(--gold-soft);
   line-height: 1.1;
+  overflow-wrap: anywhere;
 }
 
 .quote-banner {
@@ -459,9 +490,10 @@ option {
 .quote-text {
   font-family: 'Cormorant Garamond', Georgia, serif;
   font-style: italic;
-  font-size: 1.25rem;
+  font-size: clamp(1.05rem, 4.2vw, 1.25rem);
   line-height: 1.45;
   animation: quote-in 0.7s ease;
+  overflow-wrap: anywhere;
 }
 
 .quote-ref {
@@ -531,6 +563,7 @@ option {
 .monthly-title,
 .yearly-title {
   font-weight: 600;
+  overflow-wrap: anywhere;
 }
 
 .weekly-bars {
@@ -767,10 +800,6 @@ option {
 }
 
 .app-toolbar {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  z-index: 3;
   display: flex;
   gap: 0.45rem;
 }
@@ -823,6 +852,10 @@ option {
   gap: 0.8rem;
 }
 
+.together-copy {
+  min-width: 0;
+}
+
 .together-ring {
   width: 76px;
   height: 76px;
@@ -873,13 +906,15 @@ html[data-theme='light'] .together-track {
   border: 1px solid var(--border);
   background: color-mix(in srgb, var(--heat) calc(var(--intensity, 0) * 72%), transparent);
   color: var(--ink);
-  border-radius: 14px;
-  min-height: 64px;
+  border-radius: 12px;
+  min-width: 0;
+  min-height: 52px;
+  padding: 0.3rem 0.05rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.15rem;
+  gap: 0.1rem;
   cursor: pointer;
 }
 
@@ -903,15 +938,16 @@ html[data-theme='light'] .together-track {
 .blessing-screen {
   position: relative;
   z-index: 2;
-  min-height: 100vh;
-  width: 100%;
+  width: min(34rem, 100%);
+  min-height: calc(100dvh - 2rem);
   display: grid;
-  place-items: center;
-  padding: 2rem 1.25rem;
+  place-items: start center;
+  padding: 0.25rem 0 1rem;
 }
 
 .blessing-inner {
   text-align: center;
+  width: 100%;
   max-width: 34rem;
   animation: rise 0.9s ease both;
 }
@@ -929,9 +965,10 @@ html[data-theme='light'] .together-track {
 .promise-verse blockquote {
   margin: 0.35rem 0 0.75rem;
   font-family: 'Cormorant Garamond', Georgia, serif;
-  font-size: clamp(1.15rem, 3.4vw, 1.45rem);
+  font-size: clamp(1rem, 3.8vw, 1.45rem);
   line-height: 1.7;
   color: var(--gold-soft);
+  overflow-wrap: anywhere;
 }
 
 .promise-verse figcaption {
@@ -976,7 +1013,6 @@ html[data-theme='light'] .ambient-mandala {
 @media (min-width: 768px) {
   .app-shell {
     padding: 2.2rem 1.5rem 4rem;
-    align-items: center;
   }
 
   .dashboard-header,
@@ -998,11 +1034,17 @@ html[data-theme='light'] .ambient-mandala {
   }
 
   .auth-card {
-    margin-top: 0;
+    padding: 2.1rem 1.6rem 1.8rem;
   }
 
   .together-card {
     grid-column: span 1;
+  }
+}
+
+@media (min-height: 760px) {
+  .blessing-screen {
+    place-items: center;
   }
 }
 
@@ -1012,8 +1054,55 @@ html[data-theme='light'] .ambient-mandala {
     display: none;
   }
 
-  .insight-tabs {
+  .panel,
+  .entry-card,
+  .records-card,
+  .quote-banner,
+  .promise-verse {
+    padding: 1.05rem;
+  }
+
+  .auth-tabs,
+  .insight-tabs,
+  .date-chips,
+  .primary {
     width: 100%;
+  }
+
+  .date-chips button,
+  .icon-btn,
+  .auth-tabs button,
+  .insight-tabs button {
+    min-height: 42px;
+  }
+
+  .heatmap {
+    gap: 0.28rem;
+  }
+
+  .heatmap-cell span {
+    letter-spacing: 0;
+    font-size: 0.6rem;
+  }
+
+  .heatmap-cell strong {
+    font-size: 0.92rem;
+  }
+
+  .monthly-trend-chart {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .blessing-inner h1 {
+    font-size: clamp(2.3rem, 12vw, 3.4rem);
+  }
+
+  .tab-long {
+    display: none;
+  }
+
+  .tab-short {
+    display: inline;
   }
 }
 

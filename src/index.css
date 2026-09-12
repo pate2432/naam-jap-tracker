@@ -64,12 +64,23 @@ html[data-theme='light'] {
   box-sizing: border-box;
 }
 
+html,
+body,
+#root {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
 body {
   margin: 0;
   min-width: 320px;
-  min-height: 100vh;
+  min-height: 100dvh;
   background: var(--page-bg);
   color: var(--text);
+}
+
+#root {
+  min-height: 100dvh;
 }
 
 img {

@@ -44,7 +44,9 @@ function App() {
   return (
     <div className="app-shell">
       <AmbientBackground />
-      <AppToolbar />
+      <div className="app-topbar">
+        <AppToolbar />
+      </div>
       <main className="app-container">
         {!isSupabaseConfigured ? (
           <div className="auth-card reveal">
