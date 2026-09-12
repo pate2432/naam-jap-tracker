@@ -7,11 +7,11 @@ export default defineConfig({
   server: {
     port: 5174,
     strictPort: true,
-    host: 'localhost',
+    host: true,
   },
   preview: {
     port: 5174,
     strictPort: true,
-    host: 'localhost',
+    host: true,
   },
 })

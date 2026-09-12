@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 export default function EntryForm({
   currentEntry,
@@ -8,6 +8,10 @@ export default function EntryForm({
   const [count, setCount] = useState(currentEntry?.count ?? '')
   const [saving, setSaving] = useState(false)
   const [justSaved, setJustSaved] = useState(false)
+
+  useEffect(() => {
+    setCount(currentEntry?.count ?? '')
+  }, [currentEntry?.count])
 
   const numericCount = Number(count || 0)
   const malas = Number.isNaN(numericCount) ? 0 : Math.floor(numericCount / 108)

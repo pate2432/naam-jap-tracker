@@ -274,6 +274,17 @@
   min-width: 0;
 }
 
+.app-shell.is-jap {
+  padding: 0;
+}
+
+.jap-shell {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  min-width: 0;
+}
+
 .dashboard {
   display: flex;
   flex-direction: column;
@@ -285,6 +296,17 @@
   display: flex;
   flex-direction: column;
   gap: 1rem;
+}
+
+.dashboard-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.dashboard-actions .jap-launch {
+  width: auto;
+  padding: 0.65rem 1.05rem;
 }
 
 .dashboard-header h1,
@@ -963,6 +985,218 @@ option {
   gap: 0.45rem;
 }
 
+.jap-orb {
+  position: relative;
+  width: min(78vmin, 430px);
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+.jap-mala {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.jap-bead {
+  fill: rgba(232, 194, 122, 0.22);
+}
+
+.jap-bead.is-filled {
+  fill: #f0a6c8;
+}
+
+.jap-bead.is-current {
+  fill: #f3d9a4;
+}
+
+.jap-name {
+  font-family: 'Noto Serif Devanagari', 'Cormorant Garamond', Georgia, serif;
+  font-weight: 600;
+  line-height: 1;
+  background: linear-gradient(180deg, #fff6dc, #e8c27a 46%, #f0a6c8);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 18px rgba(232, 194, 122, 0.35));
+}
+
+.jap-page {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  color: var(--ink);
+  background: rgba(10, 6, 16, 0.18);
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.jap-chrome,
+.jap-meter,
+.jap-hint {
+  position: relative;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.jap-chrome {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  padding: max(0.75rem, env(safe-area-inset-top))
+    max(0.9rem, env(safe-area-inset-right))
+    0.4rem
+    max(0.9rem, env(safe-area-inset-left));
+}
+
+.jap-chrome .icon-btn,
+.jap-chrome-actions {
+  pointer-events: auto;
+}
+
+.jap-chrome-actions {
+  display: flex;
+  gap: 0.45rem;
+}
+
+.jap-save {
+  flex: 1;
+  min-width: 0;
+  text-align: center;
+  color: var(--gold);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.jap-stage {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  min-height: 0;
+}
+
+.jap-page .jap-name {
+  position: relative;
+  font-size: clamp(4.6rem, 22vw, 8.4rem);
+}
+
+.jap-name-pulse {
+  animation: jap-pulse 0.42s ease;
+}
+
+.jap-meter {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.65rem;
+  width: min(520px, calc(100% - 2rem));
+  margin: 0 auto;
+  text-align: center;
+}
+
+.jap-meter strong {
+  display: block;
+  margin-top: 0.15rem;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(1.35rem, 5vw, 1.9rem);
+}
+
+.jap-hint {
+  margin: 0.85rem 0 max(1.1rem, env(safe-area-inset-bottom));
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+.jap-hint-desk {
+  display: none;
+}
+
+.jap-ripple {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  margin: -9px 0 0 -9px;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(243, 217, 164, 0.7), transparent 70%);
+  animation: jap-ripple 0.7s ease-out forwards;
+}
+
+.jap-page.mala-complete .jap-orb::after {
+  content: '';
+  position: absolute;
+  inset: 8%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(232, 194, 122, 0.28), transparent 68%);
+  animation: jap-bloom 1.3s ease-out;
+}
+
+@keyframes jap-pulse {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.06);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes jap-ripple {
+  to {
+    transform: scale(8);
+    opacity: 0;
+  }
+}
+
+@keyframes jap-bloom {
+  from {
+    opacity: 0.85;
+    transform: scale(0.72);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.18);
+  }
+}
+
+html[data-theme='light'] .jap-page {
+  background: rgba(255, 246, 236, 0.2);
+}
+
+html[data-theme='light'] .jap-name {
+  background: linear-gradient(180deg, #9a6b24, #c45d8a);
+  -webkit-background-clip: text;
+  background-clip: text;
+  filter: drop-shadow(0 0 12px rgba(196, 93, 138, 0.2));
+}
+
+html[data-theme='light'] .jap-bead {
+  fill: rgba(154, 107, 36, 0.22);
+}
+
+html[data-theme='light'] .jap-bead.is-filled {
+  fill: #c45d8a;
+}
+
+html[data-theme='light'] .jap-bead.is-current {
+  fill: #9a6b24;
+}
+
 .icon-btn,
 .date-chips button {
   border: 1px solid var(--border);
@@ -978,6 +1212,21 @@ option {
   background: linear-gradient(120deg, #e8c27a, #f0a6c8);
   color: #2a1830;
   border-color: transparent;
+}
+
+.icon-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .jap-hint-phone {
+    display: none;
+  }
+
+  .jap-hint-desk {
+    display: inline;
+  }
 }
 
 .primary:active,
@@ -1219,6 +1468,20 @@ html[data-theme='light'] .ambient-mandala {
   .quote-banner,
   .promise-verse {
     padding: 1.05rem;
+  }
+
+  .dashboard-actions {
+    width: 100%;
+  }
+
+  .dashboard-actions .jap-launch,
+  .dashboard-actions .ghost {
+    flex: 1;
+  }
+
+  .jap-save {
+    flex-basis: 100%;
+    order: 3;
   }
 
   .auth-tabs,

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { supabase } from '../lib/supabase'
 import {
   canEditWithinHours,
@@ -23,6 +23,7 @@ import InsightsPanel from './InsightsPanel'
 import AdminOverride from './AdminOverride'
 import StreaksBar from './StreaksBar'
 import WeekHeatmap from './WeekHeatmap'
+import JapPage from './JapPage'
 
 const getLabelMap = () => {
   const raw = import.meta.env.VITE_USER_LABELS || ''
@@ -40,7 +41,7 @@ const getBlessing = () => {
   return 'Night in Vrindavan is made of naam.'
 }
 
-export default function Dashboard({ session }) {
+export default function Dashboard({ session, page, onSitForNaam, onLeaveJap }) {
   const tz = getLocalTimeZone()
   const today = getTodayLocalDate(tz)
   const [selectedDate, setSelectedDate] = useState(today)
@@ -115,45 +116,52 @@ export default function Dashboard({ session }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const handleSave = async (count) => {
-    setError('')
+  const handleSave = useCallback(
+    async (count, date = selectedDate) => {
+      setError('')
 
-    const payload = {
-      user_id: session.user.id,
-      local_date: selectedDate,
-      local_tz: tz,
-      count,
-      updated_at: new Date().toISOString(),
-    }
-
-    const { data, error: saveError } = await supabase
-      .from('jap_entries')
-      .upsert(payload, { onConflict: 'user_id,local_date' })
-      .select()
-      .single()
-
-    if (saveError) {
-      setError(saveError.message)
-      return false
-    }
-
-    setEntries((prev) => {
-      const existingIndex = prev.findIndex(
-        (entry) =>
-          entry.user_id === session.user.id &&
-          entry.local_date === selectedDate,
-      )
-
-      if (existingIndex >= 0) {
-        const updated = [...prev]
-        updated[existingIndex] = data
-        return updated
+      const payload = {
+        user_id: session.user.id,
+        local_date: date,
+        local_tz: tz,
+        count,
+        updated_at: new Date().toISOString(),
       }
 
-      return [data, ...prev]
-    })
-    return true
-  }
+      const { data, error: saveError } = await supabase
+        .from('jap_entries')
+        .upsert(payload, { onConflict: 'user_id,local_date' })
+        .select()
+        .single()
+
+      if (saveError) {
+        setError(saveError.message)
+        return false
+      }
+
+      setEntries((prev) => {
+        const existingIndex = prev.findIndex(
+          (entry) =>
+            entry.user_id === session.user.id && entry.local_date === date,
+        )
+
+        if (existingIndex >= 0) {
+          const updated = [...prev]
+          updated[existingIndex] = data
+          return updated
+        }
+
+        return [data, ...prev]
+      })
+      return true
+    },
+    [selectedDate, session.user.id, tz],
+  )
+
+  const commitTodayJap = useCallback(
+    (count) => handleSave(count, today),
+    [handleSave, today],
+  )
 
   const handleLogout = async () => {
     await supabase.auth.signOut()
@@ -166,6 +174,15 @@ export default function Dashboard({ session }) {
   const currentEntry = selectedEntries.find(
     (entry) => entry.user_id === session.user.id,
   )
+
+  const todayEntry = entries.find(
+    (entry) => entry.user_id === session.user.id && entry.local_date === today,
+  )
+
+  const openJap = () => {
+    setSelectedDate(today)
+    onSitForNaam()
+  }
 
   const isEditable = canEditWithinHours(selectedDate, 36)
   const totals = useMemo(() => sumByUser(entries), [entries])
@@ -218,6 +235,16 @@ export default function Dashboard({ session }) {
     )
   }
 
+  if (page === 'jap') {
+    return (
+      <JapPage
+        todayCount={todayEntry?.count ?? 0}
+        onCommit={commitTodayJap}
+        onLeave={onLeaveJap}
+      />
+    )
+  }
+
   return (
     <div className="dashboard">
       <header className="dashboard-header reveal" style={{ '--reveal-delay': '0.04s' }}>
@@ -226,9 +253,14 @@ export default function Dashboard({ session }) {
           <h1>Naam Jap Tracker</h1>
           <p className="subtitle">{getBlessing()}</p>
         </div>
-        <button className="ghost" onClick={handleLogout} type="button">
-          Sign out
-        </button>
+        <div className="dashboard-actions">
+          <button className="primary jap-launch" onClick={openJap} type="button">
+            Sit for naam
+          </button>
+          <button className="ghost" onClick={handleLogout} type="button">
+            Sign out
+          </button>
+        </div>
       </header>
 
       <StreaksBar streaks={streaks} profiles={visibleProfiles} />

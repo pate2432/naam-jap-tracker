@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import './App.css'
 import { isSupabaseConfigured, supabase } from './lib/supabase'
+import { getPage, goToHome, goToJap } from './lib/route'
 import { usePrefs } from './prefs/usePrefs'
 import AmbientBackground from './components/AmbientBackground'
 import AppToolbar from './components/AppToolbar'
@@ -12,6 +13,7 @@ function App() {
   const { blessingSeen } = usePrefs()
   const [session, setSession] = useState(null)
   const [loading, setLoading] = useState(isSupabaseConfigured)
+  const [page, setPage] = useState(getPage)
 
   useEffect(() => {
     if (!isSupabaseConfigured || !supabase) {
@@ -32,6 +34,14 @@ function App() {
     return () => subscription.unsubscribe()
   }, [])
 
+  useEffect(() => {
+    const onPop = () => setPage(getPage())
+    window.addEventListener('popstate', onPop)
+    return () => window.removeEventListener('popstate', onPop)
+  }, [])
+
+  const onJapPage = page === 'jap' && Boolean(session)
+
   if (!blessingSeen) {
     return (
       <div className="app-shell">
@@ -42,12 +52,14 @@ function App() {
   }
 
   return (
-    <div className="app-shell">
+    <div className={`app-shell${onJapPage ? ' is-jap' : ''}`}>
       <AmbientBackground />
-      <div className="app-topbar">
-        <AppToolbar />
-      </div>
-      <main className="app-container">
+      {onJapPage ? null : (
+        <div className="app-topbar">
+          <AppToolbar />
+        </div>
+      )}
+      <main className={onJapPage ? 'jap-shell' : 'app-container'}>
         {!isSupabaseConfigured ? (
           <div className="auth-card reveal">
             <p className="eyebrow">Naam Jap Tracker</p>
@@ -68,7 +80,12 @@ function App() {
             <p>Opening the kunj...</p>
           </div>
         ) : session ? (
-          <Dashboard session={session} />
+          <Dashboard
+            session={session}
+            page={page}
+            onSitForNaam={goToJap}
+            onLeaveJap={goToHome}
+          />
         ) : (
           <AuthCard />
         )}
