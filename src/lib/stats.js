@@ -1,4 +1,11 @@
-import { getMonthKey, getMonthKeys, getWeekDates, getYearKey } from './date'
+import {
+  getMonthKey,
+  getMonthKeys,
+  getTodayLocalDate,
+  getWeekDates,
+  getYearKey,
+  shiftLocalDate,
+} from './date'
 
 export const sumByUser = (entries) =>
   entries.reduce((acc, entry) => {
@@ -61,6 +68,39 @@ export const getMonthlyTrendSeries = (entries, tz) => {
   })
 
   return series
+}
+
+export const getStreaks = (entries, userIds, tz) => {
+  const today = getTodayLocalDate(tz)
+  const daysByUser = {}
+
+  entries.forEach((entry) => {
+    if (!entry.count) return
+    if (!daysByUser[entry.user_id]) daysByUser[entry.user_id] = new Set()
+    daysByUser[entry.user_id].add(entry.local_date)
+  })
+
+  const countBack = (hasDay) => {
+    let streak = 0
+    let cursor = today
+    for (let index = 0; index < 400; index += 1) {
+      if (!hasDay(cursor)) break
+      streak += 1
+      cursor = shiftLocalDate(cursor, -1, tz)
+    }
+    return streak
+  }
+
+  const perUser = {}
+  userIds.forEach((id) => {
+    perUser[id] = countBack((day) => daysByUser[id]?.has(day))
+  })
+
+  const together = countBack((day) =>
+    userIds.every((id) => daysByUser[id]?.has(day)),
+  )
+
+  return { perUser, together }
 }
 
 export const getYearlyTotals = (entries, tz) => {

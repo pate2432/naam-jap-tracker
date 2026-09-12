@@ -8,19 +8,21 @@ import {
 import {
   getMonthlySummary,
   getMonthlyTrendSeries,
+  getStreaks,
   getWeeklySummary,
   getYearlyTotals,
   sumByUser,
 } from '../lib/stats'
 import QuoteBanner from './QuoteBanner'
+import PromiseVerse from './PromiseVerse'
 import DateSelector from './DateSelector'
 import EntryForm from './EntryForm'
 import RecordsTable from './RecordsTable'
 import StatsCards from './StatsCards'
-import WeeklySummary from './WeeklySummary'
-import MonthlyInsights from './MonthlyInsights'
-import YearlyTotals from './YearlyTotals'
+import InsightsPanel from './InsightsPanel'
 import AdminOverride from './AdminOverride'
+import StreaksBar from './StreaksBar'
+import WeekHeatmap from './WeekHeatmap'
 
 const getLabelMap = () => {
   const raw = import.meta.env.VITE_USER_LABELS || ''
@@ -31,6 +33,13 @@ const getLabelMap = () => {
   }, {})
 }
 
+const getBlessing = () => {
+  const hour = new Date().getHours()
+  if (hour < 12) return 'Morning jap is the sweetest offering.'
+  if (hour < 17) return 'May this afternoon stay in the Name.'
+  return 'Night in Vrindavan is made of naam.'
+}
+
 export default function Dashboard({ session }) {
   const tz = getLocalTimeZone()
   const today = getTodayLocalDate(tz)
@@ -38,25 +47,13 @@ export default function Dashboard({ session }) {
   const [entries, setEntries] = useState([])
   const [profiles, setProfiles] = useState([])
   const [loading, setLoading] = useState(true)
-  const [status, setStatus] = useState('')
   const [error, setError] = useState('')
+
+  const labelMap = useMemo(() => getLabelMap(), [])
 
   useEffect(() => {
     setSelectedDate(today)
   }, [today])
-
-  useEffect(() => {
-    const bootstrap = async () => {
-      setLoading(true)
-      await ensureProfile()
-      await Promise.all([loadProfiles(), loadEntries()])
-      setLoading(false)
-    }
-
-    bootstrap()
-  }, [])
-
-  const labelMap = useMemo(() => getLabelMap(), [])
 
   const ensureProfile = async () => {
     const user = session.user
@@ -105,8 +102,20 @@ export default function Dashboard({ session }) {
     setEntries(data || [])
   }
 
+  useEffect(() => {
+    const bootstrap = async () => {
+      setLoading(true)
+      await ensureProfile()
+      await Promise.all([loadProfiles(), loadEntries()])
+      setLoading(false)
+    }
+
+    bootstrap()
+    // Initial hydrate only.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   const handleSave = async (count) => {
-    setStatus('')
     setError('')
 
     const payload = {
@@ -125,7 +134,7 @@ export default function Dashboard({ session }) {
 
     if (saveError) {
       setError(saveError.message)
-      return
+      return false
     }
 
     setEntries((prev) => {
@@ -143,7 +152,7 @@ export default function Dashboard({ session }) {
 
       return [data, ...prev]
     })
-    setStatus('Saved for the day.')
+    return true
   }
 
   const handleLogout = async () => {
@@ -158,7 +167,7 @@ export default function Dashboard({ session }) {
     (entry) => entry.user_id === session.user.id,
   )
 
-  const isEditable = canEditWithinHours(selectedDate, 36, tz)
+  const isEditable = canEditWithinHours(selectedDate, 36)
   const totals = useMemo(() => sumByUser(entries), [entries])
   const weeklySummary = useMemo(
     () => getWeeklySummary(entries, tz),
@@ -184,10 +193,26 @@ export default function Dashboard({ session }) {
     }))
   }, [entries, profiles, session.user.id])
 
+  const streaks = useMemo(
+    () =>
+      getStreaks(
+        entries,
+        visibleProfiles.map((profile) => profile.id),
+        tz,
+      ),
+    [entries, visibleProfiles, tz],
+  )
+
+  const greetName =
+    labelMap[session.user.email?.toLowerCase()] ||
+    session.user.user_metadata?.display_name ||
+    (session.user.email || '').split('@')[0] ||
+    'dear one'
+
   if (loading) {
     return (
       <div className="loading-state">
-        <div className="spinner" />
+        <div className="lotus-loader" />
         <p>Preparing your tracker...</p>
       </div>
     )
@@ -195,34 +220,43 @@ export default function Dashboard({ session }) {
 
   return (
     <div className="dashboard">
-      <header className="dashboard-header">
+      <header className="dashboard-header reveal" style={{ '--reveal-delay': '0.04s' }}>
         <div>
-          <p className="muted">Radhe Radhe,</p>
+          <p className="eyebrow">Radhe Radhe, {greetName}</p>
           <h1>Naam Jap Tracker</h1>
-          <p className="subtitle">Softly tracking devotion, together.</p>
+          <p className="subtitle">{getBlessing()}</p>
         </div>
         <button className="ghost" onClick={handleLogout} type="button">
           Sign out
         </button>
       </header>
 
+      <StreaksBar streaks={streaks} profiles={visibleProfiles} />
+      <PromiseVerse compact />
       <QuoteBanner />
+      <StatsCards totals={totals} profiles={visibleProfiles} />
 
-      <section className="panel">
+      <section className="panel reveal" style={{ '--reveal-delay': '0.2s' }}>
         <div className="panel-header">
           <div>
+            <p className="eyebrow">Today&apos;s offering</p>
             <h3>Daily entry</h3>
             <p className="muted">Local timezone: {tz}</p>
           </div>
           <DateSelector selectedDate={selectedDate} onChange={setSelectedDate} />
         </div>
 
-        {status ? <div className="form-alert success">{status}</div> : null}
+        <WeekHeatmap
+          summary={weeklySummary}
+          selectedDate={selectedDate}
+          onSelectDate={setSelectedDate}
+        />
+
         {error ? <div className="form-alert error">{error}</div> : null}
 
         <div className="panel-grid">
           <EntryForm
-            selectedDate={selectedDate}
+            key={selectedDate}
             currentEntry={currentEntry}
             isEditable={isEditable}
             onSave={handleSave}
@@ -231,20 +265,15 @@ export default function Dashboard({ session }) {
         </div>
       </section>
 
-      <StatsCards totals={totals} profiles={visibleProfiles} />
-      <WeeklySummary summary={weeklySummary} profiles={visibleProfiles} />
-      <MonthlyInsights
-        monthKey={monthlySummary.currentMonth}
-        prevMonthKey={monthlySummary.prevMonth}
-        currentTotals={monthlySummary.currentTotals}
-        prevTotals={monthlySummary.prevTotals}
-        trendSeries={monthlySeries}
-        profiles={visibleProfiles}
-      />
-      <YearlyTotals
-        totals={yearlyTotals}
+      <InsightsPanel
+        weeklySummary={weeklySummary}
+        monthlySummary={monthlySummary}
+        monthlySeries={monthlySeries}
+        yearlyTotals={yearlyTotals}
         yearLabel={new Date().getFullYear()}
         profiles={visibleProfiles}
+        selectedDate={selectedDate}
+        onSelectDate={setSelectedDate}
       />
       <AdminOverride profiles={visibleProfiles} />
     </div>

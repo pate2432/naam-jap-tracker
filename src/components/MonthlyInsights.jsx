@@ -13,12 +13,16 @@ export default function MonthlyInsights({
     return { label: '0', direction: 'flat' }
   }
 
+  const tallest = Math.max(
+    1,
+    ...trendSeries.flatMap((month) =>
+      profiles.map((profile) => month.totals[profile.id] || 0),
+    ),
+  )
+
   return (
-    <div className="panel monthly-panel">
-      <div className="panel-header">
-        <h3>Monthly insights</h3>
-        <p className="muted">Trends for {monthKey.replace('-', ' ')}</p>
-      </div>
+    <div className="monthly-panel">
+      <p className="muted">Trends for {monthKey.replace('-', ' ')}</p>
       <div className="monthly-grid">
         {profiles.map((profile) => {
           const trend = getTrend(profile.id)
@@ -26,7 +30,7 @@ export default function MonthlyInsights({
             <div className="monthly-card" key={profile.id}>
               <span className="monthly-title">{profile.display_name}</span>
               <span className="monthly-value">
-                {currentTotals[profile.id] || 0}
+                {(currentTotals[profile.id] || 0).toLocaleString()}
               </span>
               <span className={`monthly-trend ${trend.direction}`}>
                 {trend.label} vs {prevMonthKey.replace('-', ' ')}
@@ -40,14 +44,14 @@ export default function MonthlyInsights({
           <div className="trend-column" key={month.key}>
             <span className="trend-label">{month.key.slice(5)}</span>
             <div className="trend-bars">
-              {profiles.map((profile) => (
+              {profiles.map((profile, index) => (
                 <span
                   key={profile.id}
-                  className="trend-bar"
+                  className={`trend-bar tone-${index % 3}`}
                   style={{
-                    height: `${Math.min(
-                      100,
-                      (month.totals[profile.id] || 0) / 5,
+                    height: `${Math.max(
+                      4,
+                      ((month.totals[profile.id] || 0) / tallest) * 100,
                     )}%`,
                   }}
                   title={`${profile.display_name}: ${

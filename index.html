@@ -2,9 +2,27 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
+    <link rel="manifest" href="/manifest.webmanifest" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#120c1c" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Naam Jap" />
+    <meta name="description" content="A quiet place for two hearts to keep the Name." />
+    <meta property="og:title" content="Naam Jap Tracker" />
+    <meta property="og:description" content="A quiet place for two hearts to keep the Name." />
+    <meta property="og:type" content="website" />
     <title>Naam Jap Tracker</title>
+    <script>
+      try {
+        var theme = localStorage.getItem('naamjap.theme') || 'dark'
+        if (theme === 'dusk') theme = 'dark'
+        document.documentElement.dataset.theme = theme
+      } catch (error) {
+        document.documentElement.dataset.theme = 'dark'
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>

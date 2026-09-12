@@ -1,24 +1,63 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Outfit:wght@400;500;600;700&display=swap');
 
 :root {
-  font-family: 'Poppins', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+  font-family: 'Outfit', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
     sans-serif;
-  line-height: 1.6;
+  line-height: 1.55;
   font-weight: 400;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #2d2a30;
-  background-color: #fff4e6;
+  color: #f6efe4;
+  background-color: #120c1c;
 
-  --text: #2d2a30;
-  --muted: #6b6a78;
-  --panel: rgba(255, 255, 255, 0.92);
-  --accent: #96d1d7;
-  --accent-2: #f2a1c5;
-  --accent-3: #b7e4a6;
-  --shadow: 0 20px 50px rgba(103, 90, 120, 0.14);
+  --ink: #f6efe4;
+  --text: #f6efe4;
+  --muted: #c9b8c6;
+  --gold: #e8c27a;
+  --gold-soft: #f3d9a4;
+  --lotus: #f0a6c8;
+  --peacock: #6ec8c4;
+  --yamuna: #7aa7e0;
+  --panel: rgba(28, 18, 42, 0.62);
+  --accent: #6ec8c4;
+  --accent-2: #f0a6c8;
+  --accent-3: #e8c27a;
+  --shadow: 0 24px 60px rgba(6, 3, 12, 0.38);
+  --border: rgba(232, 194, 122, 0.2);
+  --page-bg: #120c1c;
+  --sky-top: #1a1028;
+  --sky-mid: #241433;
+  --sky-bottom: #1a1634;
+  --glow-lotus: rgba(240, 166, 200, 0.22);
+  --glow-peacock: rgba(110, 200, 196, 0.18);
+  --glow-gold: rgba(232, 194, 122, 0.2);
+  --heat: #e8c27a;
+}
+
+html[data-theme='light'] {
+  color: #2d2433;
+  background-color: #f4ebe0;
+  --ink: #2d2433;
+  --text: #2d2433;
+  --muted: #6f6172;
+  --gold: #9a6b24;
+  --gold-soft: #7a5420;
+  --lotus: #c45d8a;
+  --peacock: #2f8a86;
+  --yamuna: #3d6cb0;
+  --panel: rgba(255, 252, 248, 0.78);
+  --shadow: 0 20px 50px rgba(90, 70, 80, 0.12);
+  --border: rgba(154, 107, 36, 0.16);
+  --page-bg: #f4ebe0;
+  --sky-top: #fff6ec;
+  --sky-mid: #f7e6d4;
+  --sky-bottom: #efd8c6;
+  --glow-lotus: rgba(240, 166, 200, 0.28);
+  --glow-peacock: rgba(110, 200, 196, 0.16);
+  --glow-gold: rgba(232, 194, 122, 0.28);
+  --heat: #c9893a;
 }
 
 * {
@@ -29,7 +68,7 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background: linear-gradient(180deg, #fff6e9 0%, #f7e9d5 100%);
+  background: var(--page-bg);
   color: var(--text);
 }
 
@@ -46,8 +85,10 @@ h1,
 h2,
 h3 {
   margin: 0;
+  font-family: 'Cormorant Garamond', Georgia, serif;
   font-weight: 600;
-  color: var(--text);
+  letter-spacing: 0.01em;
+  color: var(--ink);
 }
 
 a {
@@ -55,10 +96,20 @@ a {
   text-decoration: none;
 }
 
-button {
+button,
+input,
+select {
   font-family: inherit;
 }
 
 .muted {
   color: var(--muted);
+}
+
+.eyebrow {
+  margin: 0 0 0.35rem;
+  color: var(--gold);
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
 }

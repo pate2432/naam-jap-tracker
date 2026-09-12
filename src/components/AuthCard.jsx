@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { supabase } from '../lib/supabase'
+import PromiseVerse from './PromiseVerse'
 
 const getAllowedEmails = () => {
   const raw = import.meta.env.VITE_ALLOWED_EMAILS || ''
@@ -70,11 +71,17 @@ export default function AuthCard() {
   }
 
   return (
-    <div className="auth-card">
-      <h2>Welcome to Naam Jap Tracker</h2>
-      <p className="muted">
-        Sign in to record your daily jap and stay connected.
+    <div className="auth-card reveal">
+      <div className="auth-crest" aria-hidden="true">
+        <span className="auth-lotus" />
+      </div>
+      <p className="eyebrow">Radhe Radhe</p>
+      <h2>Naam Jap Tracker</h2>
+      <p className="muted auth-lead">
+        A quiet place for two hearts to keep the Name.
       </p>
+
+      <PromiseVerse compact />
 
       <div className="auth-tabs">
         <button
@@ -82,14 +89,14 @@ export default function AuthCard() {
           onClick={() => setMode('password')}
           type="button"
         >
-          Email + Password
+          Password
         </button>
         <button
           className={mode === 'magic' ? 'active' : ''}
           onClick={() => setMode('magic')}
           type="button"
         >
-          Magic Link
+          Magic link
         </button>
       </div>
 
@@ -128,7 +135,7 @@ export default function AuthCard() {
           {loading
             ? 'Please wait...'
             : mode === 'password'
-              ? 'Sign in'
+              ? 'Enter the kunj'
               : 'Send magic link'}
         </button>
       </form>

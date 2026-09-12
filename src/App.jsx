@@ -1,16 +1,20 @@
 import { useEffect, useState } from 'react'
 import './App.css'
 import { isSupabaseConfigured, supabase } from './lib/supabase'
+import { usePrefs } from './prefs/usePrefs'
+import AmbientBackground from './components/AmbientBackground'
+import AppToolbar from './components/AppToolbar'
 import AuthCard from './components/AuthCard'
+import BlessingScreen from './components/BlessingScreen'
 import Dashboard from './components/Dashboard'
 
 function App() {
+  const { blessingSeen } = usePrefs()
   const [session, setSession] = useState(null)
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(isSupabaseConfigured)
 
   useEffect(() => {
     if (!isSupabaseConfigured || !supabase) {
-      setLoading(false)
       return undefined
     }
 
@@ -28,19 +32,23 @@ function App() {
     return () => subscription.unsubscribe()
   }, [])
 
+  if (!blessingSeen) {
+    return (
+      <div className="app-shell">
+        <AmbientBackground />
+        <BlessingScreen />
+      </div>
+    )
+  }
+
   return (
     <div className="app-shell">
-      <div className="app-overlay" />
-      <div className="app-decorations" aria-hidden="true">
-        <span className="icon lotus" />
-        <span className="icon flute" />
-        <span className="icon cow" />
-        <span className="icon peacock" />
-        <span className="icon radha-krishna" />
-      </div>
+      <AmbientBackground />
+      <AppToolbar />
       <main className="app-container">
         {!isSupabaseConfigured ? (
-          <div className="auth-card">
+          <div className="auth-card reveal">
+            <p className="eyebrow">Naam Jap Tracker</p>
             <h2>Connect Supabase</h2>
             <p className="muted">
               Add your Supabase keys in a local <code>.env</code> file to start
@@ -54,8 +62,8 @@ function App() {
           </div>
         ) : loading ? (
           <div className="loading-state">
-            <div className="spinner" />
-            <p>Loading serenity...</p>
+            <div className="lotus-loader" />
+            <p>Opening the kunj...</p>
           </div>
         ) : session ? (
           <Dashboard session={session} />

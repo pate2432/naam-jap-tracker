@@ -13,7 +13,10 @@ export default function AdminOverride({ profiles }) {
   const canSubmit = secret && userId && date && count !== ''
 
   const sortedProfiles = useMemo(
-    () => profiles.slice().sort((a, b) => a.display_name.localeCompare(b.display_name)),
+    () =>
+      profiles
+        .slice()
+        .sort((a, b) => a.display_name.localeCompare(b.display_name)),
     [profiles],
   )
 
@@ -48,15 +51,16 @@ export default function AdminOverride({ profiles }) {
   }
 
   return (
-    <section className="panel admin-panel">
-      <div className="panel-header">
+    <details className="panel admin-panel reveal" style={{ '--reveal-delay': '0.36s' }}>
+      <summary className="panel-header">
         <div>
+          <p className="eyebrow">Caretaker</p>
           <h3>Admin override</h3>
           <p className="muted">
             Update past dates with the admin secret. Use carefully.
           </p>
         </div>
-      </div>
+      </summary>
 
       <form className="admin-form" onSubmit={handleSubmit}>
         <label>
@@ -104,6 +108,6 @@ export default function AdminOverride({ profiles }) {
           {busy ? 'Updating...' : 'Apply override'}
         </button>
       </form>
-    </section>
+    </details>
   )
 }

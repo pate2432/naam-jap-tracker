@@ -16,9 +16,20 @@ export default function QuoteBanner() {
   const quote = GITA_QUOTES[index]
 
   return (
-    <div className="quote-banner">
-      <p className="quote-text">"{quote.text}"</p>
+    <div className="quote-banner reveal" style={{ '--reveal-delay': '0.1s' }}>
+      <p className="quote-kicker">Bhagavad Gita</p>
+      <p key={index} className="quote-text">
+        “{quote.text}”
+      </p>
       <span className="quote-ref">{quote.reference}</span>
+      <div className="quote-dots" aria-hidden="true">
+        {GITA_QUOTES.map((item, quoteIndex) => (
+          <span
+            key={item.reference}
+            className={quoteIndex === index ? 'active' : ''}
+          />
+        ))}
+      </div>
     </div>
   )
 }

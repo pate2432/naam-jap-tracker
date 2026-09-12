@@ -13,14 +13,22 @@ export const formatDisplayDate = (date, tz = getLocalTimeZone()) =>
 export const getTodayLocalDate = (tz = getLocalTimeZone()) =>
   formatLocalDate(new Date(), tz)
 
+export const shiftLocalDate = (localDate, days, tz = getLocalTimeZone()) =>
+  formatLocalDate(addDays(new Date(`${localDate}T12:00:00`), days), tz)
+
+export const getYesterdayLocalDate = (tz = getLocalTimeZone()) =>
+  shiftLocalDate(getTodayLocalDate(tz), -1, tz)
+
+export const formatWeekdayLetter = (localDate, tz = getLocalTimeZone()) =>
+  formatInTimeZone(new Date(`${localDate}T12:00:00`), tz, 'EEEEE')
+
+export const formatDayNumber = (localDate, tz = getLocalTimeZone()) =>
+  formatInTimeZone(new Date(`${localDate}T12:00:00`), tz, 'd')
+
 export const isToday = (localDate, tz = getLocalTimeZone()) =>
   localDate === getTodayLocalDate(tz)
 
-export const canEditWithinHours = (
-  localDate,
-  hours = 36,
-  tz = getLocalTimeZone(),
-) => {
+export const canEditWithinHours = (localDate, hours = 36) => {
   if (!localDate) return false
   const dateStart = new Date(`${localDate}T00:00:00`)
   const deadline = addHours(dateStart, hours)
