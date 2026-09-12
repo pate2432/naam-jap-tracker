@@ -1,3 +1,6 @@
+import SkyCycle from './SkyCycle'
+import { useSkyClock } from '../hooks/useSkyClock'
+
 const STARS = Array.from({ length: 36 }, (_, index) => ({
   id: `star-${index}`,
   left: `${(index * 37) % 100}%`,
@@ -22,12 +25,14 @@ const FIREFLIES = Array.from({ length: 7 }, (_, index) => ({
 }))
 
 export default function AmbientBackground() {
+  const { sky, entered } = useSkyClock()
+
   return (
     <div className="ambient" aria-hidden="true">
-      <div className="ambient-wash" />
+      <SkyCycle sky={sky} entered={entered} />
       <div className="ambient-yamuna" />
       <div className="ambient-mandala" />
-      <div className="ambient-stars">
+      <div className="ambient-stars" style={{ opacity: sky.night }}>
         {STARS.map((star) => (
           <span
             key={star.id}
@@ -42,17 +47,22 @@ export default function AmbientBackground() {
           />
         ))}
       </div>
-      {FIREFLIES.map((fly) => (
-        <span
-          key={fly.id}
-          className="ambient-firefly"
-          style={{
-            left: fly.left,
-            top: fly.top,
-            animationDelay: fly.delay,
-          }}
-        />
-      ))}
+      <div
+        className="ambient-fireflies"
+        style={{ opacity: Math.max(0.05, sky.night) }}
+      >
+        {FIREFLIES.map((fly) => (
+          <span
+            key={fly.id}
+            className="ambient-firefly"
+            style={{
+              left: fly.left,
+              top: fly.top,
+              animationDelay: fly.delay,
+            }}
+          />
+        ))}
+      </div>
       {PETALS.map((petal) => (
         <span
           key={petal.id}
@@ -62,6 +72,7 @@ export default function AmbientBackground() {
             animationDelay: petal.delay,
             animationDuration: petal.duration,
             '--drift': petal.drift,
+            opacity: 0.22 + (1 - sky.night) * 0.38,
           }}
         />
       ))}
