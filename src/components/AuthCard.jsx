@@ -78,7 +78,7 @@ export default function AuthCard() {
       <p className="eyebrow">Radhe Radhe</p>
       <h2>Naam Jap Tracker</h2>
       <p className="muted auth-lead">
-        A quiet place for two hearts to keep the Name.
+        A quiet place to keep the Name.
       </p>
 
       <PromiseVerse compact />

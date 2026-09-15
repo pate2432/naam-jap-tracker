@@ -73,10 +73,19 @@ export default function Dashboard({ session, page, onSitForNaam, onLeaveJap }) {
   }
 
   const loadProfiles = async () => {
-    const { data, error: profilesError } = await supabase
+    let { data, error: profilesError } = await supabase
       .from('profiles')
-      .select('id, display_name, email')
+      .select('id, display_name, email, role')
       .order('display_name', { ascending: true })
+
+    if (profilesError) {
+      const fallback = await supabase
+        .from('profiles')
+        .select('id, display_name, email')
+        .order('display_name', { ascending: true })
+      data = fallback.data
+      profilesError = fallback.error
+    }
 
     if (profilesError) {
       setError(profilesError.message)
@@ -84,7 +93,9 @@ export default function Dashboard({ session, page, onSitForNaam, onLeaveJap }) {
     }
 
     if (data && data.length > 0) {
-      setProfiles(data)
+      setProfiles(
+        data.filter((profile) => (profile.role || 'tracker') === 'tracker'),
+      )
     }
   }
 

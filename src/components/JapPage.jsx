@@ -47,7 +47,12 @@ function MalaRing({ count, className }) {
   )
 }
 
-export default function JapPage({ todayCount = 0, onCommit, onLeave }) {
+export default function JapPage({
+  todayCount = 0,
+  onCommit,
+  onLeave,
+  leaveLabel = 'Back',
+}) {
   const { theme, setTheme } = usePrefs()
   const startRef = useRef(todayCount)
   const tapsRef = useRef(0)
@@ -181,7 +186,7 @@ export default function JapPage({ todayCount = 0, onCommit, onLeave }) {
     >
       <div className="jap-chrome">
         <button className="icon-btn" type="button" onClick={leave}>
-          Back
+          {leaveLabel}
         </button>
         <p className="jap-save" aria-live="polite">
           {error

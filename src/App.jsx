@@ -2,12 +2,14 @@ import { useEffect, useState } from 'react'
 import './App.css'
 import { isSupabaseConfigured, supabase } from './lib/supabase'
 import { getPage, goToHome, goToJap } from './lib/route'
+import { isJapOnly } from './lib/roles'
 import { usePrefs } from './prefs/usePrefs'
 import AmbientBackground from './components/AmbientBackground'
 import AppToolbar from './components/AppToolbar'
 import AuthCard from './components/AuthCard'
 import BlessingScreen from './components/BlessingScreen'
 import Dashboard from './components/Dashboard'
+import JapOnlyApp from './components/JapOnlyApp'
 
 function App() {
   const { blessingSeen } = usePrefs()
@@ -40,7 +42,8 @@ function App() {
     return () => window.removeEventListener('popstate', onPop)
   }, [])
 
-  const onJapPage = page === 'jap' && Boolean(session)
+  const japOnly = isJapOnly(session)
+  const onJapPage = Boolean(session) && (japOnly || page === 'jap')
 
   if (!blessingSeen) {
     return (
@@ -80,12 +83,16 @@ function App() {
             <p>Opening the kunj...</p>
           </div>
         ) : session ? (
-          <Dashboard
-            session={session}
-            page={page}
-            onSitForNaam={goToJap}
-            onLeaveJap={goToHome}
-          />
+          japOnly ? (
+            <JapOnlyApp session={session} />
+          ) : (
+            <Dashboard
+              session={session}
+              page={page}
+              onSitForNaam={goToJap}
+              onLeaveJap={goToHome}
+            />
+          )
         ) : (
           <AuthCard />
         )}
