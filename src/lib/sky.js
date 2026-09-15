@@ -17,6 +17,23 @@ const mixRgb = (from, to, amount) =>
 
 const clamp = (value, min = 0, max = 1) => Math.min(max, Math.max(min, value))
 
+const channelLum = (channel) => {
+  const value = channel / 255
+  return value <= 0.03928 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4
+}
+
+const luminance = (rgb) =>
+  0.2126 * channelLum(rgb[0]) +
+  0.7152 * channelLum(rgb[1]) +
+  0.0722 * channelLum(rgb[2])
+
+const skyModeFromLight = (topRgb, midRgb, warmth) => {
+  const light = luminance(topRgb) * 0.7 + luminance(midRgb) * 0.3
+  if (light >= 0.22) return 'day'
+  if (light >= 0.08 || warmth >= 0.45) return 'dusk'
+  return 'night'
+}
+
 const STOPS = [
   { hour: 0, top: '#07060f', mid: '#100c1c', bottom: '#1a1430', glow: [196, 210, 255], warmth: 0.08 },
   { hour: 4.6, top: '#0c0a18', mid: '#1a1230', bottom: '#2a1838', glow: [210, 170, 220], warmth: 0.16 },
@@ -104,6 +121,7 @@ export const getSkyState = (date = new Date()) => {
     sunset,
     night,
     warmth,
+    mode: skyModeFromLight(top, mid, warmth),
     sun: { ...sun, opacity: sunOpacity },
     moon: { ...moon, opacity: moonOpacity },
     colors: {

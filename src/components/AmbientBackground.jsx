@@ -1,3 +1,4 @@
+import { useLayoutEffect } from 'react'
 import SkyCycle from './SkyCycle'
 import { useSkyClock } from '../hooks/useSkyClock'
 
@@ -26,6 +27,10 @@ const FIREFLIES = Array.from({ length: 7 }, (_, index) => ({
 
 export default function AmbientBackground() {
   const { sky, entered } = useSkyClock()
+
+  useLayoutEffect(() => {
+    document.documentElement.dataset.sky = sky.mode
+  }, [sky.mode])
 
   return (
     <div className="ambient" aria-hidden="true">

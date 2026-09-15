@@ -19,8 +19,12 @@
         var theme = localStorage.getItem('naamjap.theme') || 'dark'
         if (theme === 'dusk') theme = 'dark'
         document.documentElement.dataset.theme = theme
+        var hour = new Date().getHours()
+        document.documentElement.dataset.sky =
+          hour >= 7 && hour < 17 ? 'day' : hour >= 5 && hour < 21 ? 'dusk' : 'night'
       } catch (error) {
         document.documentElement.dataset.theme = 'dark'
+        document.documentElement.dataset.sky = 'night'
       }
     </script>
   </head>

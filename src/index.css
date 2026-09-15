@@ -20,13 +20,17 @@
   --lotus: #f0a6c8;
   --peacock: #6ec8c4;
   --yamuna: #7aa7e0;
-  --panel: rgba(28, 18, 42, 0.62);
+  --panel: rgba(20, 13, 32, 0.86);
   --accent: #6ec8c4;
   --accent-2: #f0a6c8;
   --accent-3: #e8c27a;
   --shadow: 0 24px 60px rgba(6, 3, 12, 0.38);
-  --border: rgba(232, 194, 122, 0.2);
+  --border: rgba(232, 194, 122, 0.28);
   --page-bg: #120c1c;
+  --sky-ink: #f6efe4;
+  --sky-muted: #d5c4d1;
+  --sky-gold: #e8c27a;
+  --sky-text-shadow: 0 1px 14px rgba(8, 6, 16, 0.55);
   --sky-top: #1a1028;
   --sky-mid: #241433;
   --sky-bottom: #1a1634;
@@ -47,9 +51,9 @@ html[data-theme='light'] {
   --lotus: #c45d8a;
   --peacock: #2f8a86;
   --yamuna: #3d6cb0;
-  --panel: rgba(255, 252, 248, 0.78);
-  --shadow: 0 20px 50px rgba(90, 70, 80, 0.12);
-  --border: rgba(154, 107, 36, 0.16);
+  --panel: rgba(255, 252, 248, 0.94);
+  --shadow: 0 20px 50px rgba(90, 70, 80, 0.14);
+  --border: rgba(154, 107, 36, 0.22);
   --page-bg: #f4ebe0;
   --sky-top: #fff6ec;
   --sky-mid: #f7e6d4;
@@ -58,6 +62,27 @@ html[data-theme='light'] {
   --glow-peacock: rgba(110, 200, 196, 0.16);
   --glow-gold: rgba(232, 194, 122, 0.28);
   --heat: #c9893a;
+}
+
+html[data-sky='day'] {
+  --sky-ink: #2a1830;
+  --sky-muted: #4a3852;
+  --sky-gold: #7a4e16;
+  --sky-text-shadow: 0 1px 12px rgba(255, 246, 236, 0.72);
+}
+
+html[data-sky='dusk'] {
+  --sky-ink: #fff6ec;
+  --sky-muted: #ffe8d2;
+  --sky-gold: #ffe2a8;
+  --sky-text-shadow: 0 1px 16px rgba(24, 10, 18, 0.58);
+}
+
+html[data-sky='night'] {
+  --sky-ink: #f6efe4;
+  --sky-muted: #d5c4d1;
+  --sky-gold: #e8c27a;
+  --sky-text-shadow: 0 1px 14px rgba(8, 6, 16, 0.55);
 }
 
 * {
@@ -123,4 +148,16 @@ select {
   font-size: 0.78rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }

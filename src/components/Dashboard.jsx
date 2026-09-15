@@ -24,6 +24,7 @@ import AdminOverride from './AdminOverride'
 import StreaksBar from './StreaksBar'
 import WeekHeatmap from './WeekHeatmap'
 import JapPage from './JapPage'
+import QuickEntry from './QuickEntry'
 
 const getLabelMap = () => {
   const raw = import.meta.env.VITE_USER_LABELS || ''
@@ -185,6 +186,7 @@ export default function Dashboard({ session, page, onSitForNaam, onLeaveJap }) {
   }
 
   const isEditable = canEditWithinHours(selectedDate, 36)
+  const todayEditable = canEditWithinHours(today, 36)
   const totals = useMemo(() => sumByUser(entries), [entries])
   const weeklySummary = useMemo(
     () => getWeeklySummary(entries, tz),
@@ -263,6 +265,13 @@ export default function Dashboard({ session, page, onSitForNaam, onLeaveJap }) {
         </div>
       </header>
 
+      <QuickEntry
+        currentEntry={todayEntry}
+        isEditable={todayEditable}
+        onSave={commitTodayJap}
+      />
+      {error ? <div className="form-alert error">{error}</div> : null}
+
       <StreaksBar streaks={streaks} profiles={visibleProfiles} />
       <PromiseVerse compact />
       <QuoteBanner />
@@ -271,8 +280,8 @@ export default function Dashboard({ session, page, onSitForNaam, onLeaveJap }) {
       <section className="panel reveal" style={{ '--reveal-delay': '0.2s' }}>
         <div className="panel-header">
           <div>
-            <p className="eyebrow">Today&apos;s offering</p>
-            <h3>Daily entry</h3>
+            <p className="eyebrow">Past days</p>
+            <h3>Daily record</h3>
             <p className="muted">Local timezone: {tz}</p>
           </div>
           <DateSelector selectedDate={selectedDate} onChange={setSelectedDate} />
@@ -284,15 +293,15 @@ export default function Dashboard({ session, page, onSitForNaam, onLeaveJap }) {
           onSelectDate={setSelectedDate}
         />
 
-        {error ? <div className="form-alert error">{error}</div> : null}
-
         <div className="panel-grid">
-          <EntryForm
-            key={selectedDate}
-            currentEntry={currentEntry}
-            isEditable={isEditable}
-            onSave={handleSave}
-          />
+          {selectedDate === today ? null : (
+            <EntryForm
+              key={selectedDate}
+              currentEntry={currentEntry}
+              isEditable={isEditable}
+              onSave={handleSave}
+            />
+          )}
           <RecordsTable entries={selectedEntries} profiles={visibleProfiles} />
         </div>
       </section>
