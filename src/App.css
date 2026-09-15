@@ -327,24 +327,24 @@
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 2px 10px rgba(8, 6, 16, 0.35));
 }
 
 html[data-sky='day'] .dashboard-header h1,
 html[data-sky='day'] .blessing-inner h1 {
   background: linear-gradient(120deg, #6a3e14, #9a3d68 48%, #1a6a66);
-  filter: drop-shadow(0 1px 8px rgba(255, 246, 236, 0.55));
+  -webkit-background-clip: text;
+  background-clip: text;
 }
 
 html[data-sky='dusk'] .dashboard-header h1,
 html[data-sky='dusk'] .blessing-inner h1 {
   background: linear-gradient(120deg, #fff1c8, #ffc0d8 48%, #c8fff6);
-  filter: drop-shadow(0 2px 12px rgba(20, 8, 16, 0.45));
+  -webkit-background-clip: text;
+  background-clip: text;
 }
 
 .auth-card h2 {
   color: var(--ink);
-  filter: none;
 }
 
 .subtitle {
@@ -1130,7 +1130,6 @@ html[data-theme='light'] .monthly-trend.down {
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  filter: drop-shadow(0 0 18px rgba(232, 194, 122, 0.35));
 }
 
 .jap-page {
@@ -1301,7 +1300,6 @@ html[data-sky='day'] .jap-name {
   background: linear-gradient(180deg, #6a3e14, #9a3d68);
   -webkit-background-clip: text;
   background-clip: text;
-  filter: drop-shadow(0 0 12px rgba(196, 93, 138, 0.2));
 }
 
 html[data-theme='light'] .jap-bead {
@@ -1528,7 +1526,6 @@ html[data-theme='light'] .together-track {
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 2px 10px rgba(8, 6, 16, 0.35));
 }
 
 .blessing-lotus {
