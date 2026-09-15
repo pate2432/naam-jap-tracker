@@ -56,6 +56,7 @@ export default function JapPage({
   const { theme, setTheme } = usePrefs()
   const startRef = useRef(todayCount)
   const tapsRef = useRef(0)
+  const [baseCount, setBaseCount] = useState(todayCount)
   const [taps, setTaps] = useState(0)
   const [ripples, setRipples] = useState([])
   const [pulse, setPulse] = useState(0)
@@ -63,27 +64,23 @@ export default function JapPage({
   const [saveState, setSaveState] = useState('idle')
   const [error, setError] = useState('')
 
-  const liveCount = startRef.current + taps
+  const liveCount = baseCount + taps
   const leftover = liveCount % MALA
   const malas = Math.floor(liveCount / MALA)
 
   useEffect(() => {
-    startRef.current = todayCount
-    tapsRef.current = 0
-    setTaps(0)
-    setRipples([])
-    setPulse(0)
-    setMalaFlash(false)
-    setSaveState('idle')
-    setError('')
     const previousOverflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
     return () => {
       document.body.style.overflow = previousOverflow
     }
-    // Capture today's saved count only when this page opens.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  useEffect(() => {
+    if (tapsRef.current > 0) return
+    startRef.current = todayCount
+    setBaseCount(todayCount)
+  }, [todayCount])
 
   const commit = useCallback(
     async (count) => {

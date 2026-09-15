@@ -3,13 +3,13 @@ import { useTodayJap } from '../hooks/useTodayJap'
 import JapPage from './JapPage'
 
 export default function JapOnlyApp({ session }) {
-  const { count, loading, save } = useTodayJap(session)
+  const { count, ready, error, save } = useTodayJap(session)
 
   const signOut = async () => {
     await supabase.auth.signOut()
   }
 
-  if (loading) {
+  if (!ready) {
     return (
       <div className="loading-state">
         <div className="lotus-loader" />
@@ -19,11 +19,14 @@ export default function JapOnlyApp({ session }) {
   }
 
   return (
-    <JapPage
-      todayCount={count}
-      onCommit={save}
-      onLeave={signOut}
-      leaveLabel="Sign out"
-    />
+    <>
+      {error ? <div className="form-alert error jap-only-alert">{error}</div> : null}
+      <JapPage
+        todayCount={count}
+        onCommit={save}
+        onLeave={signOut}
+        leaveLabel="Sign out"
+      />
+    </>
   )
 }
