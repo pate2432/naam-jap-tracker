@@ -30,7 +30,8 @@ export default function AmbientBackground() {
 
   useLayoutEffect(() => {
     document.documentElement.dataset.sky = sky.mode
-  }, [sky.mode])
+    document.documentElement.dataset.japSky = sky.phase
+  }, [sky.mode, sky.phase])
 
   return (
     <div className="ambient" aria-hidden="true">

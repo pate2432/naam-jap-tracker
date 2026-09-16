@@ -278,6 +278,39 @@
   padding: 0;
 }
 
+.sky-preview {
+  position: fixed;
+  z-index: 60;
+  left: max(0.55rem, env(safe-area-inset-left));
+  bottom: max(0.55rem, env(safe-area-inset-bottom));
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.28rem;
+  max-width: min(22rem, calc(100vw - 1.2rem));
+  padding: 0.32rem;
+  border-radius: 999px;
+  background: rgba(12, 8, 18, 0.72);
+  border: 1px solid rgba(232, 194, 122, 0.28);
+  box-shadow: 0 10px 28px rgba(6, 3, 12, 0.28);
+  backdrop-filter: blur(16px);
+}
+
+.sky-preview button {
+  border: 0;
+  background: transparent;
+  color: #f3e6d0;
+  border-radius: 999px;
+  padding: 0.38rem 0.62rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+}
+
+.sky-preview button.active {
+  background: linear-gradient(120deg, #e8c27a, #f0a6c8);
+  color: #2a1830;
+}
+
 .app-shell.is-jap .ambient-stars,
 .app-shell.is-jap .ambient-fireflies {
   display: none;
@@ -1232,7 +1265,7 @@ html[data-theme='light'] .monthly-trend.down {
   font-family: 'Noto Serif Devanagari', 'Cormorant Garamond', Georgia, serif;
   font-weight: 600;
   line-height: 0.92;
-  color: #f0ddc0;
+  color: var(--jap-name);
 }
 
 .jap-only-alert {
@@ -1244,9 +1277,15 @@ html[data-theme='light'] .monthly-trend.down {
 
 
 .jap-page {
-  --jap-ink: #f3e6d0;
-  --jap-muted: rgba(243, 230, 208, 0.55);
-  --jap-gold: #d4b07a;
+  --jap-ink: #ead9c0;
+  --jap-muted: rgba(234, 217, 192, 0.52);
+  --jap-gold: #c4ae7a;
+  --jap-name: #e2d0ae;
+  --jap-name-glow: 0 0 18px rgba(201, 177, 122, 0.16);
+  --jap-name-pulse: 0 0 22px rgba(201, 177, 122, 0.22);
+  --jap-veil: rgba(8, 5, 14, 0.56);
+  --jap-aura-gold: rgba(232, 194, 122, 0.12);
+  --jap-aura-lotus: rgba(240, 166, 200, 0.06);
   position: fixed;
   inset: 0;
   z-index: 30;
@@ -1254,10 +1293,9 @@ html[data-theme='light'] .monthly-trend.down {
   flex-direction: column;
   color: var(--jap-ink);
   background:
-    radial-gradient(ellipse at 50% 36%, rgba(108, 46, 62, 0.38), transparent 46%),
-    radial-gradient(ellipse at 18% 88%, rgba(62, 36, 78, 0.32), transparent 42%),
-    radial-gradient(ellipse at 82% 12%, rgba(48, 72, 86, 0.18), transparent 36%),
-    rgba(8, 5, 14, 0.7);
+    radial-gradient(ellipse at 50% 36%, rgba(108, 46, 62, 0.28), transparent 46%),
+    radial-gradient(ellipse at 18% 88%, rgba(62, 36, 78, 0.22), transparent 42%),
+    var(--jap-veil);
   touch-action: manipulation;
   user-select: none;
   -webkit-user-select: none;
@@ -1346,8 +1384,8 @@ html[data-theme='light'] .monthly-trend.down {
   inset: 22%;
   border-radius: 50%;
   background:
-    radial-gradient(circle, rgba(232, 194, 122, 0.16), transparent 68%),
-    radial-gradient(circle, rgba(240, 166, 200, 0.08), transparent 78%);
+    radial-gradient(circle, var(--jap-aura-lotus), transparent 62%),
+    radial-gradient(circle, var(--jap-aura-gold), transparent 72%);
   filter: blur(12px);
   animation: jap-breathe 5.6s ease-in-out infinite;
 }
@@ -1355,13 +1393,15 @@ html[data-theme='light'] .monthly-trend.down {
 .jap-page .jap-name {
   position: relative;
   font-size: clamp(5.6rem, 28vw, 10rem);
-  text-shadow:
-    0 0 28px rgba(232, 194, 122, 0.28),
-    0 0 56px rgba(240, 166, 200, 0.18);
+  color: var(--jap-name);
+  text-shadow: var(--jap-name-glow);
+  transition:
+    color 0.7s ease,
+    text-shadow 0.7s ease;
 }
 
 .jap-name-pulse {
-  animation: jap-pulse 0.48s ease;
+  animation: jap-pulse 0.42s ease-out;
 }
 
 .jap-celebrate {
@@ -1481,8 +1521,8 @@ html[data-theme='light'] .monthly-trend.down {
   margin: -1.1rem 0 0 -1.4rem;
   font-family: 'Noto Serif Devanagari', 'Cormorant Garamond', Georgia, serif;
   font-size: 1.15rem;
-  color: #f3e0b2;
-  text-shadow: 0 0 12px rgba(232, 194, 122, 0.45);
+  color: var(--jap-name);
+  text-shadow: var(--jap-name-glow);
   animation: jap-float 1.05s ease-out forwards;
 }
 
@@ -1504,11 +1544,9 @@ html[data-theme='light'] .monthly-trend.down {
   0% {
     transform: scale(1);
   }
-  38% {
-    transform: scale(1.06);
-    text-shadow:
-      0 0 34px rgba(240, 166, 200, 0.42),
-      0 0 64px rgba(232, 194, 122, 0.28);
+  40% {
+    transform: scale(1.016);
+    text-shadow: var(--jap-name-pulse);
   }
   100% {
     transform: scale(1);
@@ -1581,18 +1619,74 @@ html[data-theme='light'] .monthly-trend.down {
   }
 }
 
+html[data-jap-sky='dawn'] .jap-page {
+  --jap-name: #e8c8a8;
+  --jap-name-glow: 0 0 18px rgba(232, 176, 140, 0.18);
+  --jap-name-pulse: 0 0 22px rgba(232, 176, 140, 0.24);
+  --jap-veil: rgba(10, 6, 14, 0.54);
+  --jap-aura-gold: rgba(255, 176, 120, 0.12);
+  --jap-aura-lotus: rgba(240, 166, 200, 0.07);
+}
+
+html[data-jap-sky='morning'] .jap-page {
+  --jap-name: #ead6b8;
+  --jap-name-glow:
+    0 1px 0 rgba(42, 24, 32, 0.22),
+    0 0 16px rgba(232, 194, 122, 0.14);
+  --jap-name-pulse:
+    0 1px 0 rgba(42, 24, 32, 0.22),
+    0 0 20px rgba(232, 194, 122, 0.2);
+  --jap-veil: rgba(14, 9, 16, 0.62);
+  --jap-aura-gold: rgba(232, 194, 122, 0.1);
+  --jap-aura-lotus: rgba(240, 166, 200, 0.05);
+}
+
+html[data-jap-sky='noon'] .jap-page {
+  --jap-name: #f0dcc0;
+  --jap-name-glow:
+    0 1px 0 rgba(32, 18, 24, 0.28),
+    0 2px 10px rgba(20, 10, 16, 0.18);
+  --jap-name-pulse:
+    0 1px 0 rgba(32, 18, 24, 0.28),
+    0 0 18px rgba(232, 194, 122, 0.16);
+  --jap-veil: rgba(16, 10, 16, 0.66);
+  --jap-aura-gold: rgba(232, 194, 122, 0.08);
+  --jap-aura-lotus: rgba(240, 166, 200, 0.04);
+}
+
+html[data-jap-sky='golden'] .jap-page {
+  --jap-name: #edcda8;
+  --jap-name-glow: 0 0 18px rgba(232, 180, 110, 0.18);
+  --jap-name-pulse: 0 0 22px rgba(232, 180, 110, 0.24);
+  --jap-veil: rgba(12, 7, 14, 0.58);
+  --jap-aura-gold: rgba(255, 176, 100, 0.12);
+  --jap-aura-lotus: rgba(240, 166, 200, 0.05);
+}
+
+html[data-jap-sky='dusk'] .jap-page {
+  --jap-name: #e8c8a4;
+  --jap-name-glow: 0 0 18px rgba(232, 164, 128, 0.16);
+  --jap-name-pulse: 0 0 22px rgba(232, 164, 128, 0.22);
+  --jap-veil: rgba(10, 6, 16, 0.55);
+  --jap-aura-gold: rgba(255, 150, 120, 0.1);
+  --jap-aura-lotus: rgba(240, 166, 200, 0.06);
+}
+
+html[data-jap-sky='night'] .jap-page {
+  --jap-name: #d8c49a;
+  --jap-name-glow: 0 0 16px rgba(201, 177, 122, 0.14);
+  --jap-name-pulse: 0 0 20px rgba(201, 177, 122, 0.2);
+  --jap-veil: rgba(8, 5, 14, 0.5);
+  --jap-aura-gold: rgba(232, 194, 122, 0.1);
+  --jap-aura-lotus: rgba(240, 166, 200, 0.05);
+}
+
 html[data-theme='light'] .jap-page,
 html[data-sky='day'] .jap-page {
   background:
-    radial-gradient(ellipse at 50% 36%, rgba(98, 44, 58, 0.34), transparent 48%),
-    radial-gradient(ellipse at 18% 88%, rgba(56, 34, 70, 0.28), transparent 44%),
-    rgba(10, 7, 16, 0.64);
-}
-
-html[data-theme='light'] .jap-name,
-html[data-sky='day'] .jap-name {
-  color: #f0ddc0;
-  background: none;
+    radial-gradient(ellipse at 50% 36%, rgba(98, 44, 58, 0.28), transparent 48%),
+    radial-gradient(ellipse at 18% 88%, rgba(56, 34, 70, 0.2), transparent 44%),
+    var(--jap-veil);
 }
 
 html[data-theme='light'] .jap-bead {

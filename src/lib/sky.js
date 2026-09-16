@@ -73,6 +73,16 @@ const arcPoint = (progress, left, right, low, rise) => {
   return { x, y }
 }
 
+export const getJapSkyPhase = (hour) => {
+  const h = ((hour % 24) + 24) % 24
+  if (h >= 5.15 && h < 6.9) return 'dawn'
+  if (h >= 6.9 && h < 10.4) return 'morning'
+  if (h >= 10.4 && h < 15.5) return 'noon'
+  if (h >= 15.5 && h < 17.7) return 'golden'
+  if (h >= 17.7 && h < 20.15) return 'dusk'
+  return 'night'
+}
+
 export const getSkyState = (date = new Date()) => {
   const hour =
     date.getHours() +
@@ -122,6 +132,7 @@ export const getSkyState = (date = new Date()) => {
     night,
     warmth,
     mode: skyModeFromLight(top, mid, warmth),
+    phase: getJapSkyPhase(hour),
     sun: { ...sun, opacity: sunOpacity },
     moon: { ...moon, opacity: moonOpacity },
     colors: {

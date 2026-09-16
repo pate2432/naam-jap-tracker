@@ -9,6 +9,7 @@ import AuthCard from './components/AuthCard'
 import BlessingScreen from './components/BlessingScreen'
 import Dashboard from './components/Dashboard'
 import JapOnlyApp from './components/JapOnlyApp'
+import SkyPreviewBar from './components/SkyPreviewBar'
 
 function App() {
   const { blessingSeen } = usePrefs()
@@ -43,10 +44,12 @@ function App() {
 
   const japOnly = isJapOnly(session)
   const onJapPage = Boolean(session) && (japOnly || page === 'jap')
+  const skyPreview = import.meta.env.DEV ? <SkyPreviewBar /> : null
 
   if (!blessingSeen) {
     return (
       <div className="app-shell">
+        {skyPreview}
         <AmbientBackground />
         <BlessingScreen />
       </div>
@@ -55,6 +58,7 @@ function App() {
 
   return (
     <div className={`app-shell${onJapPage ? ' is-jap' : ''}`}>
+      {skyPreview}
       <AmbientBackground />
       <main className={onJapPage ? 'jap-shell' : 'app-container'}>
         {!isSupabaseConfigured ? (

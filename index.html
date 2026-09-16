@@ -20,9 +20,22 @@
         var hour = new Date().getHours()
         document.documentElement.dataset.sky =
           hour >= 7 && hour < 17 ? 'day' : hour >= 5 && hour < 21 ? 'dusk' : 'night'
+        document.documentElement.dataset.japSky =
+          hour >= 5 && hour < 7
+            ? 'dawn'
+            : hour >= 7 && hour < 10
+              ? 'morning'
+              : hour >= 10 && hour < 16
+                ? 'noon'
+                : hour >= 16 && hour < 18
+                  ? 'golden'
+                  : hour >= 18 && hour < 20
+                    ? 'dusk'
+                    : 'night'
       } catch (error) {
         document.documentElement.dataset.theme = 'dark'
         document.documentElement.dataset.sky = 'night'
+        document.documentElement.dataset.japSky = 'night'
       }
     </script>
   </head>
