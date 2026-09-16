@@ -33,10 +33,8 @@ export default function EntryForm({
 
   return (
     <div className="entry-card">
-      <h3>Your daily jap</h3>
-      <p className="muted">
-        You can edit up to 36 hours after the date starts.
-      </p>
+      <h3>Edit this day</h3>
+      <p className="muted">You can change this for 36 hours.</p>
 
       <form onSubmit={handleSubmit}>
         <label className="count-label">

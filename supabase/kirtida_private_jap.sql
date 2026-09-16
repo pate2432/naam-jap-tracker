@@ -72,3 +72,21 @@ using (
     )
   )
 );
+
+drop policy if exists "Users can insert own entries" on jap_entries;
+drop policy if exists "Users can update own entries within 36 hours" on jap_entries;
+
+create policy "Users can insert own entries"
+on jap_entries for insert
+with check (auth.uid() = user_id);
+
+create policy "Users can update own entries within 36 hours"
+on jap_entries for update
+using (
+  auth.uid() = user_id
+  and (now() at time zone local_tz) <= (local_date::timestamp + interval '36 hours')
+)
+with check (
+  auth.uid() = user_id
+  and (now() at time zone local_tz) <= (local_date::timestamp + interval '36 hours')
+);

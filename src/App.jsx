@@ -5,7 +5,6 @@ import { getPage, goToHome, goToJap } from './lib/route'
 import { isJapOnly } from './lib/roles'
 import { usePrefs } from './prefs/usePrefs'
 import AmbientBackground from './components/AmbientBackground'
-import AppToolbar from './components/AppToolbar'
 import AuthCard from './components/AuthCard'
 import BlessingScreen from './components/BlessingScreen'
 import Dashboard from './components/Dashboard'
@@ -57,11 +56,6 @@ function App() {
   return (
     <div className={`app-shell${onJapPage ? ' is-jap' : ''}`}>
       <AmbientBackground />
-      {onJapPage ? null : (
-        <div className="app-topbar">
-          <AppToolbar />
-        </div>
-      )}
       <main className={onJapPage ? 'jap-shell' : 'app-container'}>
         {!isSupabaseConfigured ? (
           <div className="auth-card reveal">

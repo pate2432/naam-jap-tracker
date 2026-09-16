@@ -22,27 +22,29 @@ export default function InsightsPanel({
   const [tab, setTab] = useState('week')
 
   return (
-    <section className="panel insights-panel reveal" style={{ '--reveal-delay': '0.28s' }}>
-      <div className="panel-header insights-header">
+    <details className="panel fold-panel insights-panel reveal" style={{ '--reveal-delay': '0.28s' }}>
+      <summary className="panel-header insights-header">
         <div>
           <p className="eyebrow">Insights</p>
           <h3>How the naam is growing</h3>
+          <p className="muted">Week, month, and year — open when you want the numbers.</p>
         </div>
-        <div className="insight-tabs" role="tablist">
-          {TABS.map((item) => (
-            <button
-              key={item.id}
-              type="button"
-              role="tab"
-              aria-selected={tab === item.id}
-              className={tab === item.id ? 'active' : ''}
-              onClick={() => setTab(item.id)}
-            >
-              <span className="tab-long">{item.label}</span>
-              <span className="tab-short">{item.short}</span>
-            </button>
-          ))}
-        </div>
+      </summary>
+
+      <div className="insight-tabs" role="tablist">
+        {TABS.map((item) => (
+          <button
+            key={item.id}
+            type="button"
+            role="tab"
+            aria-selected={tab === item.id}
+            className={tab === item.id ? 'active' : ''}
+            onClick={() => setTab(item.id)}
+          >
+            <span className="tab-long">{item.label}</span>
+            <span className="tab-short">{item.short}</span>
+          </button>
+        ))}
       </div>
 
       <div className="insight-pane" key={tab}>
@@ -72,6 +74,6 @@ export default function InsightsPanel({
           />
         ) : null}
       </div>
-    </section>
+    </details>
   )
 }

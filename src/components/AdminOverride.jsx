@@ -51,7 +51,7 @@ export default function AdminOverride({ profiles }) {
   }
 
   return (
-    <details className="panel admin-panel reveal" style={{ '--reveal-delay': '0.36s' }}>
+    <details className="panel fold-panel admin-panel reveal" style={{ '--reveal-delay': '0.36s' }}>
       <summary className="panel-header">
         <div>
           <p className="eyebrow">Caretaker</p>

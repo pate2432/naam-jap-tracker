@@ -1,15 +1,27 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { usePrefs } from '../prefs/usePrefs'
 
 const MALA = 108
 const SAVE_WAIT_MS = 800
+
+const seed = (n) => {
+  const value = Math.sin(n * 12.9898) * 43758.5453
+  return value - Math.floor(value)
+}
+
+const PETALS = Array.from({ length: 8 }, (_, index) => ({
+  left: `${6 + seed(index + 71) * 88}%`,
+  delay: seed(index + 61) * 10,
+  duration: 14 + seed(index + 67) * 10,
+  drift: `${-28 + seed(index + 73) * 56}px`,
+  size: 9 + seed(index + 79) * 8,
+}))
 
 const BEADS = Array.from({ length: MALA }, (_, index) => {
   const angle = (index / MALA) * Math.PI * 2 - Math.PI / 2
   return {
     index,
-    cx: 50 + Math.cos(angle) * 46.4,
-    cy: 50 + Math.sin(angle) * 46.4,
+    cx: 50 + Math.cos(angle) * 43.5,
+    cy: 50 + Math.sin(angle) * 43.5,
   }
 })
 
@@ -35,11 +47,13 @@ function MalaRing({ count, className }) {
                 ? isCurrent
                   ? 'jap-bead is-current'
                   : 'jap-bead is-filled'
-                : 'jap-bead'
+                : isGuru
+                  ? 'jap-bead is-guru'
+                  : 'jap-bead'
             }
             cx={bead.cx}
             cy={bead.cy}
-            r={isGuru ? 1.45 : isCurrent ? 1.2 : 0.82}
+            r={isGuru ? 1.45 : isCurrent ? 1.18 : isFilled ? 0.92 : 0.7}
           />
         )
       })}
@@ -53,12 +67,11 @@ export default function JapPage({
   onLeave,
   leaveLabel = 'Back',
 }) {
-  const { theme, setTheme } = usePrefs()
   const startRef = useRef(todayCount)
   const tapsRef = useRef(0)
   const [baseCount, setBaseCount] = useState(todayCount)
   const [taps, setTaps] = useState(0)
-  const [ripples, setRipples] = useState([])
+  const [fx, setFx] = useState([])
   const [pulse, setPulse] = useState(0)
   const [malaFlash, setMalaFlash] = useState(false)
   const [saveState, setSaveState] = useState('idle')
@@ -67,6 +80,7 @@ export default function JapPage({
   const liveCount = baseCount + taps
   const leftover = liveCount % MALA
   const malas = Math.floor(liveCount / MALA)
+  const beadFill = malaProgress(liveCount)
 
   useEffect(() => {
     const previousOverflow = document.body.style.overflow
@@ -111,18 +125,28 @@ export default function JapPage({
     setPulse((value) => value + 1)
     setSaveState('idle')
 
-    if (clientX != null && clientY != null) {
+    let burstX = clientX
+    let burstY = clientY
+    if (burstX == null || burstY == null) {
+      const orb = document.querySelector('.jap-orb')
+      if (orb) {
+        const box = orb.getBoundingClientRect()
+        burstX = box.left + box.width / 2
+        burstY = box.top + box.height / 2
+      }
+    }
+    if (burstX != null && burstY != null) {
       const id = `${Date.now()}-${nextTaps}`
-      setRipples((prev) => [...prev.slice(-6), { id, x: clientX, y: clientY }])
+      setFx((prev) => [...prev.slice(-7), { id, x: burstX, y: burstY }])
       window.setTimeout(() => {
-        setRipples((prev) => prev.filter((ripple) => ripple.id !== id))
-      }, 700)
+        setFx((prev) => prev.filter((item) => item.id !== id))
+      }, 1100)
     }
 
     if (nextCount % MALA === 0) {
       setMalaFlash(true)
-      window.setTimeout(() => setMalaFlash(false), 1400)
-      if (navigator.vibrate) navigator.vibrate([12, 30, 18])
+      window.setTimeout(() => setMalaFlash(false), 1600)
+      if (navigator.vibrate) navigator.vibrate([14, 28, 18, 28, 22])
     } else if (navigator.vibrate) {
       navigator.vibrate(10)
     }
@@ -178,9 +202,26 @@ export default function JapPage({
 
   return (
     <div
-      className={`jap-page${malaFlash ? ' mala-complete' : ''}`}
+      className="jap-page"
       onPointerDown={handleSurface}
     >
+      <div className="jap-sky" aria-hidden="true">
+        {PETALS.map((petal, index) => (
+          <span
+            key={`petal-${index}`}
+            className="jap-petal"
+            style={{
+              left: petal.left,
+              width: petal.size,
+              height: petal.size * 1.45,
+              animationDelay: `${petal.delay}s`,
+              animationDuration: `${petal.duration}s`,
+              '--drift': petal.drift,
+            }}
+          />
+        ))}
+      </div>
+
       <div className="jap-chrome">
         <button className="icon-btn" type="button" onClick={leave}>
           {leaveLabel}
@@ -191,19 +232,12 @@ export default function JapPage({
             : saveState === 'saving'
               ? 'Offering...'
               : saveState === 'saved'
-                ? 'Offered to today'
+                ? 'Offered'
                 : taps > 0
-                  ? 'This sitting is being kept'
-                  : 'Tap राधा to begin'}
+                  ? 'Keeping…'
+                  : 'Sit with the Name'}
         </p>
         <div className="jap-chrome-actions">
-          <button
-            className="icon-btn"
-            type="button"
-            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-          >
-            {theme === 'dark' ? 'Light' : 'Dark'}
-          </button>
           <button
             className="icon-btn"
             type="button"
@@ -216,7 +250,12 @@ export default function JapPage({
       </div>
 
       <div className="jap-stage">
+        <p className={`jap-celebrate${malaFlash ? ' is-on' : ''}`} aria-live="polite">
+          <strong>108</strong>
+          Mala offered
+        </p>
         <div className="jap-orb">
+          <div className="jap-aura" />
           <MalaRing count={liveCount} className="jap-mala" />
           <p key={pulse} className="jap-name jap-name-pulse" lang="sa">
             राधा
@@ -224,35 +263,57 @@ export default function JapPage({
         </div>
       </div>
 
-      <div className="jap-meter">
-        <div>
-          <span className="eyebrow">This sitting</span>
-          <strong>{taps.toLocaleString()}</strong>
+      <div className="jap-dock">
+        <div
+          className="jap-progress"
+          aria-hidden="true"
+        >
+          <span style={{ width: `${(beadFill / MALA) * 100}%` }} />
         </div>
-        <div>
-          <span className="eyebrow">Today</span>
-          <strong>{liveCount.toLocaleString()}</strong>
+        <div className="jap-meter">
+          <div>
+            <span className="jap-meter-label">This sitting</span>
+            <strong>{taps.toLocaleString()}</strong>
+          </div>
+          <div>
+            <span className="jap-meter-label">Today</span>
+            <strong>{liveCount.toLocaleString()}</strong>
+          </div>
+          <div>
+            <span className="jap-meter-label">Mala</span>
+            <strong>
+              {malas}
+              <span className="jap-meter-rest"> · {leftover}/108</span>
+            </strong>
+          </div>
         </div>
-        <div>
-          <span className="eyebrow">Mala</span>
-          <strong>
-            {malas} · {leftover}/108
-          </strong>
-        </div>
+        <p className="jap-hint">
+          <span className="jap-hint-phone">Tap to offer the Name</span>
+          <span className="jap-hint-desk">Click or press space to offer the Name</span>
+        </p>
       </div>
 
-      <p className="jap-hint">
-        <span className="jap-hint-phone">Tap anywhere</span>
-        <span className="jap-hint-desk">Click anywhere or press space</span>
-      </p>
-
-      {ripples.map((ripple) => (
+      {fx.map((item) => (
         <span
-          key={ripple.id}
-          className="jap-ripple"
-          style={{ left: ripple.x, top: ripple.y }}
-        />
+          key={item.id}
+          className="jap-burst"
+          style={{ left: item.x, top: item.y }}
+        >
+          <span className="jap-float" lang="sa">
+            राधा
+          </span>
+        </span>
       ))}
+
+      {malaFlash
+        ? Array.from({ length: 14 }, (_, index) => (
+            <span
+              key={`burst-${index}`}
+              className="jap-burst-petal"
+              style={{ '--a': `${index * 26}deg` }}
+            />
+          ))
+        : null}
     </div>
   )
 }

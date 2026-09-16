@@ -1,5 +1,4 @@
 import {
-  formatDisplayDate,
   getLocalTimeZone,
   getTodayLocalDate,
   getYesterdayLocalDate,
@@ -11,34 +10,30 @@ export default function DateSelector({ selectedDate, onChange }) {
   const yesterday = getYesterdayLocalDate(tz)
 
   return (
-    <div className="date-selector">
-      <div className="date-chips">
-        <button
-          type="button"
-          className={selectedDate === today ? 'active' : ''}
-          onClick={() => onChange(today)}
-        >
-          Today
-        </button>
-        <button
-          type="button"
-          className={selectedDate === yesterday ? 'active' : ''}
-          onClick={() => onChange(yesterday)}
-        >
-          Yesterday
-        </button>
-      </div>
-      <label>
-        Select date
+    <div className="date-strip">
+      <button
+        type="button"
+        className={selectedDate === today ? 'active' : ''}
+        onClick={() => onChange(today)}
+      >
+        Today
+      </button>
+      <button
+        type="button"
+        className={selectedDate === yesterday ? 'active' : ''}
+        onClick={() => onChange(yesterday)}
+      >
+        Yesterday
+      </button>
+      <label className="date-strip-pick">
+        <span className="sr-only">Date</span>
         <input
           type="date"
           value={selectedDate}
           onChange={(event) => onChange(event.target.value)}
+          aria-label="Date"
         />
       </label>
-      <span className="date-preview">
-        {formatDisplayDate(new Date(`${selectedDate}T00:00:00`), tz)}
-      </span>
     </div>
   )
 }

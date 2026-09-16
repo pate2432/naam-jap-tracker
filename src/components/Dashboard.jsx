@@ -22,7 +22,6 @@ import StatsCards from './StatsCards'
 import InsightsPanel from './InsightsPanel'
 import AdminOverride from './AdminOverride'
 import StreaksBar from './StreaksBar'
-import WeekHeatmap from './WeekHeatmap'
 import JapPage from './JapPage'
 import QuickEntry from './QuickEntry'
 
@@ -288,33 +287,22 @@ export default function Dashboard({ session, page, onSitForNaam, onLeaveJap }) {
       <QuoteBanner />
       <StatsCards totals={totals} profiles={visibleProfiles} />
 
-      <section className="panel reveal" style={{ '--reveal-delay': '0.2s' }}>
-        <div className="panel-header">
-          <div>
-            <p className="eyebrow">Past days</p>
-            <h3>Daily record</h3>
-            <p className="muted">Local timezone: {tz}</p>
-          </div>
+      <section className="panel daily-record reveal" style={{ '--reveal-delay': '0.2s' }}>
+        <div className="daily-record-bar">
+          <h3>Daily record</h3>
           <DateSelector selectedDate={selectedDate} onChange={setSelectedDate} />
         </div>
 
-        <WeekHeatmap
-          summary={weeklySummary}
-          selectedDate={selectedDate}
-          onSelectDate={setSelectedDate}
-        />
+        <RecordsTable entries={selectedEntries} profiles={visibleProfiles} />
 
-        <div className="panel-grid">
-          {selectedDate === today ? null : (
-            <EntryForm
-              key={selectedDate}
-              currentEntry={currentEntry}
-              isEditable={isEditable}
-              onSave={handleSave}
-            />
-          )}
-          <RecordsTable entries={selectedEntries} profiles={visibleProfiles} />
-        </div>
+        {selectedDate === today ? null : (
+          <EntryForm
+            key={selectedDate}
+            currentEntry={currentEntry}
+            isEditable={isEditable}
+            onSave={handleSave}
+          />
+        )}
       </section>
 
       <InsightsPanel
