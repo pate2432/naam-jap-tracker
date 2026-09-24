@@ -1385,7 +1385,6 @@ html[data-theme='light'] .monthly-trend.down {
   display: grid;
   place-items: center;
   min-height: 0;
-  padding-bottom: 7vh;
 }
 
 .jap-aura {
@@ -1401,8 +1400,7 @@ html[data-theme='light'] .monthly-trend.down {
 
 .jap-page .jap-name {
   position: relative;
-  top: -0.16em;
-  font-size: clamp(6.5rem, 32vw, 11.2rem);
+  font-size: clamp(5.6rem, 28vw, 10rem);
   color: var(--jap-name);
   text-shadow: var(--jap-name-glow);
   transition:
@@ -1528,12 +1526,12 @@ html[data-theme='light'] .monthly-trend.down {
 
 .jap-float {
   position: absolute;
-  margin: -1.1rem 0 0 -1.4rem;
+  margin: -1.35rem 0 0 -1.85rem;
   font-family: 'Noto Serif Devanagari', 'Cormorant Garamond', Georgia, serif;
-  font-size: 1.15rem;
+  font-size: 1.65rem;
   color: var(--jap-name);
   text-shadow: var(--jap-name-glow);
-  animation: jap-float 1.05s ease-out forwards;
+  animation: jap-float 1.2s ease-out forwards;
 }
 
 .jap-burst-petal {
@@ -1570,7 +1568,7 @@ html[data-theme='light'] .monthly-trend.down {
   }
   100% {
     opacity: 0;
-    transform: translateY(-92px) scale(1.08);
+    transform: translateY(-150px) scale(1.08);
   }
 }
 
@@ -2041,7 +2039,7 @@ html[data-theme='light'] .ambient-mandala {
   }
 
   .jap-page .jap-name {
-    font-size: clamp(5.5rem, 28vw, 8.6rem);
+    font-size: clamp(4.6rem, 24vw, 7.2rem);
   }
 
   .jap-orb {

@@ -147,7 +147,7 @@ export default function JapPage({
       setFx((prev) => [...prev.slice(-7), { id, x: burstX, y: burstY }])
       window.setTimeout(() => {
         setFx((prev) => prev.filter((item) => item.id !== id))
-      }, 1100)
+      }, 1250)
     }
 
     if (nextCount % MALA === 0) {
