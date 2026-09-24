@@ -1385,6 +1385,7 @@ html[data-theme='light'] .monthly-trend.down {
   display: grid;
   place-items: center;
   min-height: 0;
+  padding-bottom: 7vh;
 }
 
 .jap-aura {
@@ -1400,7 +1401,8 @@ html[data-theme='light'] .monthly-trend.down {
 
 .jap-page .jap-name {
   position: relative;
-  font-size: clamp(5.6rem, 28vw, 10rem);
+  top: -0.16em;
+  font-size: clamp(6.5rem, 32vw, 11.2rem);
   color: var(--jap-name);
   text-shadow: var(--jap-name-glow);
   transition:
@@ -2039,7 +2041,7 @@ html[data-theme='light'] .ambient-mandala {
   }
 
   .jap-page .jap-name {
-    font-size: clamp(4.6rem, 24vw, 7.2rem);
+    font-size: clamp(5.5rem, 28vw, 8.6rem);
   }
 
   .jap-orb {
