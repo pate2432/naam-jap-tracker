@@ -69,10 +69,12 @@ export default function JapPage({
 }) {
   const startRef = useRef(todayCount)
   const tapsRef = useRef(0)
+  const pageRef = useRef(null)
+  const nameRef = useRef(null)
+  const touchLockRef = useRef(0)
   const [baseCount, setBaseCount] = useState(todayCount)
   const [taps, setTaps] = useState(0)
   const [fx, setFx] = useState([])
-  const [pulse, setPulse] = useState(0)
   const [malaFlash, setMalaFlash] = useState(false)
   const [saveState, setSaveState] = useState('idle')
   const [error, setError] = useState('')
@@ -122,8 +124,13 @@ export default function JapPage({
     tapsRef.current = nextTaps
     const nextCount = startRef.current + nextTaps
     setTaps(nextTaps)
-    setPulse((value) => value + 1)
     setSaveState('idle')
+    const name = nameRef.current
+    if (name) {
+      name.classList.remove('jap-name-pulse')
+      void name.offsetWidth
+      name.classList.add('jap-name-pulse')
+    }
 
     let burstX = clientX
     let burstY = clientY
@@ -196,12 +203,39 @@ export default function JapPage({
   const handleSurface = (event) => {
     if (event.pointerType === 'mouse' && event.button !== 0) return
     if (event.target.closest('button')) return
+    if (Date.now() - touchLockRef.current < 500) return
     event.preventDefault()
     offerOne(event.clientX, event.clientY)
   }
 
+  useEffect(() => {
+    const node = pageRef.current
+    if (!node) return undefined
+
+    const onTouchStart = (event) => {
+      if (event.target.closest('button')) return
+      event.preventDefault()
+      touchLockRef.current = Date.now()
+      const touch = event.changedTouches[0]
+      offerOne(touch?.clientX, touch?.clientY)
+    }
+
+    const onContextMenu = (event) => {
+      if (event.target.closest('button')) return
+      event.preventDefault()
+    }
+
+    node.addEventListener('touchstart', onTouchStart, { passive: false })
+    node.addEventListener('contextmenu', onContextMenu)
+    return () => {
+      node.removeEventListener('touchstart', onTouchStart)
+      node.removeEventListener('contextmenu', onContextMenu)
+    }
+  }, [offerOne])
+
   return (
     <div
+      ref={pageRef}
       className="jap-page"
       onPointerDown={handleSurface}
     >
@@ -257,7 +291,7 @@ export default function JapPage({
         <div className="jap-orb">
           <div className="jap-aura" />
           <MalaRing count={liveCount} className="jap-mala" />
-          <p key={pulse} className="jap-name jap-name-pulse" lang="sa">
+          <p ref={nameRef} className="jap-name" lang="sa">
             राधा
           </p>
         </div>

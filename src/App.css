@@ -647,6 +647,7 @@ option {
   background: linear-gradient(120deg, #e8c27a, #f0a6c8);
   color: #2a1830;
   box-shadow: 0 14px 28px rgba(232, 194, 122, 0.22);
+  -webkit-tap-highlight-color: transparent;
 }
 
 .ghost {
@@ -1283,7 +1284,7 @@ html[data-theme='light'] .monthly-trend.down {
   --jap-name: #e2d0ae;
   --jap-name-glow: 0 0 18px rgba(201, 177, 122, 0.16);
   --jap-name-pulse: 0 0 22px rgba(201, 177, 122, 0.22);
-  --jap-veil: rgba(8, 5, 14, 0.56);
+  --jap-veil: #120c16;
   --jap-aura-gold: rgba(232, 194, 122, 0.12);
   --jap-aura-lotus: rgba(240, 166, 200, 0.06);
   position: fixed;
@@ -1292,16 +1293,21 @@ html[data-theme='light'] .monthly-trend.down {
   display: flex;
   flex-direction: column;
   color: var(--jap-ink);
-  background:
+  background-color: var(--jap-veil);
+  background-image:
     radial-gradient(ellipse at 50% 36%, rgba(108, 46, 62, 0.28), transparent 46%),
-    radial-gradient(ellipse at 18% 88%, rgba(62, 36, 78, 0.22), transparent 42%),
-    var(--jap-veil);
-  touch-action: manipulation;
+    radial-gradient(ellipse at 18% 88%, rgba(62, 36, 78, 0.22), transparent 42%);
+  touch-action: none;
   user-select: none;
   -webkit-user-select: none;
   -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
   cursor: pointer;
   overflow: hidden;
+  overscroll-behavior: none;
+  isolation: isolate;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 .jap-sky {
@@ -1353,6 +1359,8 @@ html[data-theme='light'] .monthly-trend.down {
   color: var(--jap-ink);
   font-size: 0.82rem;
   padding: 0.5rem 0.9rem;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .jap-chrome-actions {
@@ -1623,7 +1631,7 @@ html[data-jap-sky='dawn'] .jap-page {
   --jap-name: #e8c8a8;
   --jap-name-glow: 0 0 18px rgba(232, 176, 140, 0.18);
   --jap-name-pulse: 0 0 22px rgba(232, 176, 140, 0.24);
-  --jap-veil: rgba(10, 6, 14, 0.54);
+  --jap-veil: #161018;
   --jap-aura-gold: rgba(255, 176, 120, 0.12);
   --jap-aura-lotus: rgba(240, 166, 200, 0.07);
 }
@@ -1636,7 +1644,7 @@ html[data-jap-sky='morning'] .jap-page {
   --jap-name-pulse:
     0 1px 0 rgba(42, 24, 32, 0.22),
     0 0 20px rgba(232, 194, 122, 0.2);
-  --jap-veil: rgba(14, 9, 16, 0.62);
+  --jap-veil: #1a1218;
   --jap-aura-gold: rgba(232, 194, 122, 0.1);
   --jap-aura-lotus: rgba(240, 166, 200, 0.05);
 }
@@ -1649,7 +1657,7 @@ html[data-jap-sky='noon'] .jap-page {
   --jap-name-pulse:
     0 1px 0 rgba(32, 18, 24, 0.28),
     0 0 18px rgba(232, 194, 122, 0.16);
-  --jap-veil: rgba(16, 10, 16, 0.66);
+  --jap-veil: #1c1418;
   --jap-aura-gold: rgba(232, 194, 122, 0.08);
   --jap-aura-lotus: rgba(240, 166, 200, 0.04);
 }
@@ -1658,7 +1666,7 @@ html[data-jap-sky='golden'] .jap-page {
   --jap-name: #edcda8;
   --jap-name-glow: 0 0 18px rgba(232, 180, 110, 0.18);
   --jap-name-pulse: 0 0 22px rgba(232, 180, 110, 0.24);
-  --jap-veil: rgba(12, 7, 14, 0.58);
+  --jap-veil: #181016;
   --jap-aura-gold: rgba(255, 176, 100, 0.12);
   --jap-aura-lotus: rgba(240, 166, 200, 0.05);
 }
@@ -1667,7 +1675,7 @@ html[data-jap-sky='dusk'] .jap-page {
   --jap-name: #e8c8a4;
   --jap-name-glow: 0 0 18px rgba(232, 164, 128, 0.16);
   --jap-name-pulse: 0 0 22px rgba(232, 164, 128, 0.22);
-  --jap-veil: rgba(10, 6, 16, 0.55);
+  --jap-veil: #140e18;
   --jap-aura-gold: rgba(255, 150, 120, 0.1);
   --jap-aura-lotus: rgba(240, 166, 200, 0.06);
 }
@@ -1676,17 +1684,17 @@ html[data-jap-sky='night'] .jap-page {
   --jap-name: #d8c49a;
   --jap-name-glow: 0 0 16px rgba(201, 177, 122, 0.14);
   --jap-name-pulse: 0 0 20px rgba(201, 177, 122, 0.2);
-  --jap-veil: rgba(8, 5, 14, 0.5);
+  --jap-veil: #100c16;
   --jap-aura-gold: rgba(232, 194, 122, 0.1);
   --jap-aura-lotus: rgba(240, 166, 200, 0.05);
 }
 
 html[data-theme='light'] .jap-page,
 html[data-sky='day'] .jap-page {
-  background:
+  background-color: var(--jap-veil);
+  background-image:
     radial-gradient(ellipse at 50% 36%, rgba(98, 44, 58, 0.28), transparent 48%),
-    radial-gradient(ellipse at 18% 88%, rgba(56, 34, 70, 0.2), transparent 44%),
-    var(--jap-veil);
+    radial-gradient(ellipse at 18% 88%, rgba(56, 34, 70, 0.2), transparent 44%);
 }
 
 html[data-theme='light'] .jap-bead {
@@ -1712,6 +1720,7 @@ html[data-theme='light'] .jap-bead.is-current {
   font-size: 0.78rem;
   cursor: pointer;
   backdrop-filter: blur(12px);
+  -webkit-tap-highlight-color: transparent;
 }
 
 .date-chips button.active,

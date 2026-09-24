@@ -87,6 +87,7 @@ html[data-sky='night'] {
 
 * {
   box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 }
 
 html,
@@ -94,6 +95,13 @@ body,
 #root {
   max-width: 100%;
   overflow-x: hidden;
+  background-color: #120c1c;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+  overscroll-behavior: none;
 }
 
 body {
@@ -136,6 +144,7 @@ button,
 input,
 select {
   font-family: inherit;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .muted {
